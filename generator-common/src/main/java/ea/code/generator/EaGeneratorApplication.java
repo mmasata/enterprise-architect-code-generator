@@ -7,13 +7,18 @@ import ea.code.generator.config.GeneratorConfiguration;
 import ea.code.generator.context.GeneratorContext;
 import ea.code.generator.processor.EaProcessor;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.DependsOn;
 
+import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -31,7 +36,49 @@ public class EaGeneratorApplication {
     public static void run(Class mainClass, String[] args) {
 
         applicationContext = SpringApplication.run(mainClass, args);
-        runCodeGenerator();
+
+        var generatorContext = (GeneratorContext) applicationContext.getBean(GENERATOR_CONTEXT_NAME);
+        var enabledCodeGenerators = generatorContext.getConfiguration().getEnabledGenerators();
+
+        EaProcessor.getInstance().run(generatorContext);
+
+        if (enabledCodeGenerators == null) {
+            log.error("Parameter enabledGenerators is missing in config file!");
+            System.exit(0);
+        }
+
+        var codeGenBeans = applicationContext.getBeansWithAnnotation(GenerateCode.class);
+        var relevantBeans = codeGenBeans.keySet().stream()
+                .map(codeGenBeans::get)
+                .filter(bean -> enabledCodeGenerators.contains(bean.getClass().getAnnotation(GenerateCode.class).name()))
+                .toList();
+
+        relevantBeans.forEach(bean -> Arrays.stream(bean.getClass().getDeclaredMethods())
+                .filter(method -> method.isAnnotationPresent(RunGenerator.class))
+                .forEach(method -> {
+                    try {
+                        log.info("Running {}.{}() code generator.", bean.getClass().getName(), method.getName());
+                        method.invoke(bean);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        throw new RuntimeException(e);
+                    }
+                }));
+    }
+
+    @SneakyThrows
+    @Bean
+    @DependsOn(GENERATOR_CONTEXT_NAME)
+    public DataSource dataSource(@Autowired GeneratorContext generatorContext) {
+
+        var databaseConnection = generatorContext.getConfiguration().getDatabaseConnection();
+        var datasource =  DataSourceBuilder.create()
+                .url(databaseConnection.getUrl())
+                .username(databaseConnection.getUser())
+                .password(databaseConnection.getPassword())
+                .build();
+
+        log.info("Database connection valid = {}", datasource.getConnection().isValid(1000));
+        return datasource;
     }
 
     @Bean(name = GENERATOR_CONTEXT_NAME)
@@ -48,7 +95,6 @@ public class EaGeneratorApplication {
         var context = new GeneratorContext();
         context.setConfiguration(getGeneratorConfiguration(inputFilePath));
 
-        EaProcessor.getInstance().run(context);
         log.trace("GeneratorContext Bean has been created");
         return context;
     }
@@ -72,34 +118,6 @@ public class EaGeneratorApplication {
             log.error("Cannot write config to DTO object!");
             throw new RuntimeException(e);
         }
-    }
-
-    private static void runCodeGenerator() {
-
-        var generatorContext = (GeneratorContext) applicationContext.getBean(GENERATOR_CONTEXT_NAME);
-        var enabledCodeGenerators = generatorContext.getConfiguration().getEnabledGenerators();
-
-        if (enabledCodeGenerators == null) {
-            log.error("Parameter enabledGenerators is missing in config file!");
-            System.exit(0);
-        }
-
-        var codeGenBeans = applicationContext.getBeansWithAnnotation(GenerateCode.class);
-        var relevantBeans = codeGenBeans.keySet().stream()
-                .map(key -> codeGenBeans.get(key))
-                .filter(bean -> enabledCodeGenerators.contains(bean.getClass().getAnnotation(GenerateCode.class).name()))
-                .toList();
-
-        relevantBeans.forEach(bean -> Arrays.stream(bean.getClass().getDeclaredMethods())
-                .filter(method -> method.isAnnotationPresent(RunGenerator.class))
-                .forEach(method -> {
-                    try {
-                        log.info("Running {}.{}() code generator.", bean.getClass().getName(), method.getName());
-                        method.invoke(bean);
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        throw new RuntimeException(e);
-                    }
-                }));
     }
 
 }
