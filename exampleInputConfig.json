@@ -1,0 +1,11 @@
+{
+  "databaseConnection": {
+    "url" : "DB_URL",
+    "user": "DB_USER",
+    "password": "DB_PASSWORD"
+  },
+  "eaStartPackage": "Api/TestPath",
+  "company": "SomeCompany",
+  "project": "Dummy",
+  "enabledGenerators": ["swagger", "test"]
+}
