@@ -9,5 +9,10 @@ public class SwaggerEndpoint {
 
     public String operationId;
 
+    public String requestSchemaName;
+    public String requestContentType;
+
     public List<SwaggerParameter> swaggerParameters;
+
+    public List<SwaggerResponse> swaggerResponses;
 }
