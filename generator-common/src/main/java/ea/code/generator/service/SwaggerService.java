@@ -1,4 +1,4 @@
-package ea.code.generator;
+package ea.code.generator.service;
 
 import ea.code.generator.annotations.GenerateCode;
 import ea.code.generator.annotations.RunGenerator;
@@ -8,9 +8,9 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
 
-@GenerateCode(name = "test")
+@GenerateCode(name = "swagger")
 @RequiredArgsConstructor
-public class MyCustomGenerator {
+public class SwaggerService {
 
     private final GeneratorContext generatorContext;
 
@@ -18,11 +18,15 @@ public class MyCustomGenerator {
 
     @RunGenerator
     public void run() {
-        System.out.println("---------- Test generator");
+
+        var restApiResources = generatorContext.getApiResources();
+        var company = generatorContext.getConfiguration().getCompany();
+        //TODO
+        System.out.println("-------- Generating Swagger");
         System.out.println(generatorContext.getConfiguration().getCompany());
 
-        var data = fileProcessor.processFreemarkerTemplate("test.ftlh", Map.of("test", "myCoolCustomValue"));
-        fileProcessor.generate(Map.of("export/myCoolCustomGenerator.txt", data));
+        var data = fileProcessor.processFreemarkerTemplate("test.ftlh", Map.of("test", "myCoolSwaggerValue"));
+        fileProcessor.generate(Map.of("export/myCoolSwagger.txt", data));
     }
 
 }

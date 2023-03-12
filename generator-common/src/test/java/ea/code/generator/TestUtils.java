@@ -1,4 +1,4 @@
-package ea.code.generator.embedded.service;
+package ea.code.generator;
 
 import ea.code.generator.api.rest.ApiEndpoint;
 import ea.code.generator.api.rest.ApiResource;
@@ -18,11 +18,11 @@ import static ea.code.generator.api.rest.enums.HttpMessageType.RESPONSE;
 import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
-final class TestUtils {
+public final class TestUtils {
 
     private static final HttpMessage UNAUTHORIZED_RESPONSE = mockHttpMessage("UnauthorizedResponse", "application/json", RESPONSE);
 
-    static GeneratorConfiguration mockGeneratorConfiguration() {
+    public static GeneratorConfiguration mockGeneratorConfiguration() {
 
         var config = new GeneratorConfiguration();
         config.setCompany("SomeCompany");
@@ -32,7 +32,7 @@ final class TestUtils {
         return config;
     }
 
-    static ApiResource mockRestApiResource() {
+    public static ApiResource mockRestApiResource() {
 
         var apiResource = new ApiResource();
         apiResource.setPath("/api/v1/products");
