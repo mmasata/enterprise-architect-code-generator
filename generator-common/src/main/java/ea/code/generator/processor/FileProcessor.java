@@ -21,7 +21,7 @@ public class FileProcessor {
     private final Configuration freemarkerConfig;
 
     public StringWriter processFreemarkerTemplate(String templateName,
-                                                  Map<String, String> variables) {
+                                                  Map<String, Object> variables) {
 
         var stringWriter = new StringWriter();
         var template  = getTemplate(templateName);
