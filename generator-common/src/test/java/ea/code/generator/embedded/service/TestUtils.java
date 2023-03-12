@@ -6,7 +6,7 @@ import ea.code.generator.api.rest.HttpMessage;
 import ea.code.generator.api.rest.Parameter;
 import ea.code.generator.api.rest.enums.HttpMessageType;
 import ea.code.generator.api.rest.enums.HttpMethod;
-import ea.code.generator.config.GeneratorConfiguration;
+import ea.code.generator.config.model.GeneratorConfiguration;
 import lombok.NoArgsConstructor;
 
 import java.util.Collections;

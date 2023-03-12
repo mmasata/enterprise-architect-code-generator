@@ -1,6 +1,5 @@
-package ea.code.generator.config;
+package ea.code.generator.config.model;
 
-import ea.code.generator.config.model.DatabaseConnection;
 import lombok.Data;
 
 import java.util.Set;

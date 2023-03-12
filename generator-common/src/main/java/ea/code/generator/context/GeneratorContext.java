@@ -1,7 +1,7 @@
 package ea.code.generator.context;
 
 import ea.code.generator.api.rest.ApiResource;
-import ea.code.generator.config.GeneratorConfiguration;
+import ea.code.generator.config.model.GeneratorConfiguration;
 import lombok.Data;
 
 import java.util.List;

@@ -1,34 +1,28 @@
 package ea.code.generator.processor;
 
 import ea.code.generator.context.GeneratorContext;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 
-import static lombok.AccessLevel.PRIVATE;
 
-@NoArgsConstructor(access = PRIVATE)
 @Slf4j
+@Component
+@RequiredArgsConstructor
+@Scope("singleton")
 public class EaProcessor {
 
-    private static EaProcessor INSTANCE = null;
+    private final GeneratorContext generatorContext;
 
-    public static EaProcessor getInstance() {
-
-        if(INSTANCE == null) {
-            INSTANCE = new EaProcessor();
-        }
-
-        return INSTANCE;
-    }
-
-    public void run(GeneratorContext context) {
+    public void run() {
 
         log.trace("Running EAProcessor.");
         //TODO zpracuje config a zacne prekladat do common-api
         //TODO doplni do contextu List<ApiResource>, Kafku atd...
-        context.setApiResources(Collections.emptyList());
+        generatorContext.setApiResources(Collections.emptyList());
     }
 
 }
