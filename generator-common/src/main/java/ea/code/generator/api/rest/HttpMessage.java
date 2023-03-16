@@ -9,5 +9,7 @@ public class HttpMessage {
     private String modelName;
     private String contentType;
 
+    private boolean isArray;
+
     private HttpMessageType httpMessageType;
 }

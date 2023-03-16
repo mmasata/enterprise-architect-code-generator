@@ -5,11 +5,13 @@ import lombok.Data;
 @Data
 public class SwaggerPath {
 
-    public String path;
+    private String path;
 
-    public SwaggerEndpoint get;
-    public SwaggerEndpoint post;
-    public SwaggerEndpoint put;
-    public SwaggerEndpoint delete;
-    public SwaggerEndpoint patch;
+    private SwaggerEndpoint get;
+    private SwaggerEndpoint post;
+    private SwaggerEndpoint put;
+    private SwaggerEndpoint delete;
+    private SwaggerEndpoint patch;
+    private SwaggerEndpoint options;
+
 }

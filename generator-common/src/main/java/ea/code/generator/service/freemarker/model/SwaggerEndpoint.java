@@ -7,10 +7,11 @@ import java.util.List;
 @Data
 public class SwaggerEndpoint {
 
-    public String operationId;
+    private String operationId;
+    private String requestSchemaName;
+    private String requestContentType;
 
-    public String requestSchemaName;
-    public String requestContentType;
+    private boolean isRequestSchemaArray;
 
     public List<SwaggerParameter> swaggerParameters;
 

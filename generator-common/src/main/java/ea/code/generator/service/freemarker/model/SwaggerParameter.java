@@ -5,10 +5,11 @@ import lombok.Data;
 @Data
 public class SwaggerParameter {
 
-    public String name;
-    public String in;
-    public String type;
-    public String format;
+    private String name;
+    private String in;
+    private String type;
+    private String format;
+    private String example;
 
-    public boolean required;
+    private boolean required;
 }

@@ -1,7 +1,7 @@
 package ea.code.generator.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ea.code.generator.config.model.GeneratorConfiguration;
+import ea.code.generator.context.model.GeneratorConfiguration;
 import ea.code.generator.context.GeneratorContext;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

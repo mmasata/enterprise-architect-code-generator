@@ -1,6 +1,7 @@
 package ea.code.generator.api.rest;
 
 import ea.code.generator.api.rest.enums.HttpMethod;
+import ea.code.generator.api.rest.enums.HttpStatus;
 import lombok.Data;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class ApiEndpoint {
     private HttpMethod httpMethod;
     private HttpMessage request;
 
-    private Map<Integer, HttpMessage> responses;
+    private Map<HttpStatus, HttpMessage> responses;
 
     private List<Parameter> httpHeaders;
     private List<Parameter> pathParams;

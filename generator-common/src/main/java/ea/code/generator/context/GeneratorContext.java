@@ -1,7 +1,7 @@
 package ea.code.generator.context;
 
 import ea.code.generator.api.rest.ApiResource;
-import ea.code.generator.config.model.GeneratorConfiguration;
+import ea.code.generator.context.model.GeneratorConfiguration;
 import lombok.Data;
 
 import java.util.List;
@@ -13,5 +13,5 @@ public class GeneratorContext {
 
     private List<ApiResource> apiResources;
 
-    //TODO pak i kafka a modely
+    //TODO Kafka and DTO models at future
 }

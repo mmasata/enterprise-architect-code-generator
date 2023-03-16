@@ -4,9 +4,11 @@ import ea.code.generator.api.rest.ApiEndpoint;
 import ea.code.generator.api.rest.ApiResource;
 import ea.code.generator.api.rest.HttpMessage;
 import ea.code.generator.api.rest.Parameter;
+import ea.code.generator.api.rest.enums.DataType;
 import ea.code.generator.api.rest.enums.HttpMessageType;
 import ea.code.generator.api.rest.enums.HttpMethod;
-import ea.code.generator.config.model.GeneratorConfiguration;
+import ea.code.generator.api.rest.enums.HttpStatus;
+import ea.code.generator.context.model.GeneratorConfiguration;
 import lombok.NoArgsConstructor;
 
 import java.util.Collections;
@@ -15,12 +17,14 @@ import java.util.Map;
 
 import static ea.code.generator.api.rest.enums.HttpMessageType.REQUEST;
 import static ea.code.generator.api.rest.enums.HttpMessageType.RESPONSE;
+import static ea.code.generator.api.rest.enums.HttpStatus.*;
+import static ea.code.generator.api.rest.enums.HttpStatus.Unauthorized;
 import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
 public final class TestUtils {
 
-    private static final HttpMessage UNAUTHORIZED_RESPONSE = mockHttpMessage("UnauthorizedResponse", "application/json", RESPONSE);
+    private static final HttpMessage UNAUTHORIZED_RESPONSE = mockHttpMessage("UnauthorizedResponse", "application/json", RESPONSE, false);
 
     public static GeneratorConfiguration mockGeneratorConfiguration() {
 
@@ -39,35 +43,45 @@ public final class TestUtils {
 
         var getProductsEndpoint = mockApiEndpoint(
                 "getProducts"
-                , null,
+                , "",
                 HttpMethod.GET,
                 null,
-                Map.of(200, mockHttpMessage("List<GetProductResponse>", "application/json", RESPONSE), 401, UNAUTHORIZED_RESPONSE),
-                List.of(mockParameter("Content-Type", "String", null, null, false)),
+                Map.of(OK, mockHttpMessage("GetProductResponse", "application/json", RESPONSE, true), Unauthorized, UNAUTHORIZED_RESPONSE),
+                List.of(mockParameter("Content-Type", DataType.STRING, null, null, false)),
                 Collections.emptyList(),
-                List.of(mockParameter("dateFrom", "Date", null, null, true), mockParameter("dateTo", "Date", null, null, true)));
+                List.of(mockParameter("dateFrom", DataType.DATE, null, null, true), mockParameter("dateTo", DataType.DATE, null, null, true)));
 
         var getProductDetailEndpoint = mockApiEndpoint(
                 "getProductById"
                 , "/{id}",
                 HttpMethod.GET,
                 null,
-                Map.of(200, mockHttpMessage("GetProductDetailResponse", "application/json", RESPONSE), 401, UNAUTHORIZED_RESPONSE),
+                Map.of(OK, mockHttpMessage("GetProductDetailResponse", "application/json", RESPONSE, false), Unauthorized, UNAUTHORIZED_RESPONSE),
                 Collections.emptyList(),
-                List.of(mockParameter("id", "int", null, null, true)),
+                List.of(mockParameter("id", DataType.INTEGER, null, null, true)),
                 Collections.emptyList());
 
         var createProductEndpoint = mockApiEndpoint(
                 "createProduct"
-                , null,
+                , "",
                 HttpMethod.POST,
-                mockHttpMessage("CreateProductRequest", "application/json", REQUEST),
-                Map.of(201, mockHttpMessage("CreateProductResponse", "application/json", RESPONSE), 401, UNAUTHORIZED_RESPONSE),
-                List.of(mockParameter("Content-Type", "String", null, null, true)),
+                mockHttpMessage("CreateProductRequest", "application/json", REQUEST, false),
+                Map.of(Created, mockHttpMessage("CreateProductResponse", "application/json", RESPONSE, false), Unauthorized, UNAUTHORIZED_RESPONSE),
+                List.of(mockParameter("Content-Type", DataType.STRING, null, null, true)),
                 Collections.emptyList(),
                 Collections.emptyList());
 
-        apiResource.setEndpoints(List.of(getProductsEndpoint, getProductDetailEndpoint, createProductEndpoint));
+        var createProductsEndpoint = mockApiEndpoint(
+                "createProducts"
+                , "/test",
+                HttpMethod.POST,
+                mockHttpMessage("CreateProductRequest", "application/json", REQUEST, true),
+                Map.of(Created, mockHttpMessage("CreateProductResponse", "application/json", RESPONSE, true), Unauthorized, UNAUTHORIZED_RESPONSE),
+                List.of(mockParameter("Content-Type", DataType.STRING, null, null, true)),
+                Collections.emptyList(),
+                Collections.emptyList());
+
+        apiResource.setEndpoints(List.of(getProductsEndpoint, getProductDetailEndpoint, createProductEndpoint, createProductsEndpoint));
         return apiResource;
     }
 
@@ -75,7 +89,7 @@ public final class TestUtils {
                                                String path,
                                                HttpMethod httpMethod,
                                                HttpMessage request,
-                                               Map<Integer, HttpMessage> responses,
+                                               Map<HttpStatus, HttpMessage> responses,
                                                List<Parameter> httpHeaders,
                                                List<Parameter> pathParams,
                                                List<Parameter> queryParams) {
@@ -95,18 +109,20 @@ public final class TestUtils {
 
     private static HttpMessage mockHttpMessage(String modelName,
                                                String contentType,
-                                               HttpMessageType httpMessageType) {
+                                               HttpMessageType httpMessageType,
+                                               boolean isArray) {
 
         var httpMessage = new HttpMessage();
         httpMessage.setModelName(modelName);
         httpMessage.setContentType(contentType);
         httpMessage.setHttpMessageType(httpMessageType);
+        httpMessage.setArray(isArray);
 
         return httpMessage;
     }
 
     private static Parameter mockParameter(String name,
-                                           String dataType,
+                                           DataType dataType,
                                            String format,
                                            String example,
                                            boolean required) {

@@ -1,4 +1,4 @@
-package ea.code.generator.config.model;
+package ea.code.generator.context.model;
 
 import lombok.Data;
 
@@ -15,5 +15,5 @@ public final class GeneratorConfiguration {
     private DatabaseConnection databaseConnection;
 
     private Set<String> enabledGenerators;
-    //TODO dalsi
+    //TODO another params
 }

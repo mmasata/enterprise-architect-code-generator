@@ -1,4 +1,4 @@
-package ea.code.generator.config.model;
+package ea.code.generator.context.model;
 
 import lombok.Data;
 

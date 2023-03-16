@@ -44,19 +44,33 @@ paths:
       </#list>
       </#if>
       <#if operation.requestSchemaName??>
-          requestBody:
-            content:
-              ${operation.requestContentType}:
-                schema:
-                  $ref: '#/components/schemas/${operation.requestSchemaName}'
+      requestBody:
+        content:
+          ${operation.requestContentType}:
+            <#if operation.isRequestSchemaArray()>
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/${operation.requestSchemaName}'
+            <#else>
+            schema:
+              $ref: '#/components/schemas/${operation.requestSchemaName}'
+            </#if>
       </#if>
-          responses:
+      responses:
       <#list operation.swaggerResponses as response>
-            ${response.code}:
-              description: ${response.description}
-              content:
-                ${response.contentType}:
-                  schema:
-                    $ref: '#/components/schemas/${response.schemaName}'
+        ${response.code}:
+          description: ${response.description}
+          content:
+            ${response.contentType}:
+              <#if response.isArray()>
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/${response.schemaName}'
+              <#else>
+              schema:
+                $ref: '#/components/schemas/${response.schemaName}'
+              </#if>
       </#list>
 </#macro>

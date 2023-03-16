@@ -5,9 +5,11 @@ import lombok.Data;
 @Data
 public class SwaggerResponse {
 
-    public int code;
+    private int code;
 
-    public String contentType;
-    public String schemaName;
-    public String description;
+    private String contentType;
+    private String schemaName;
+    private String description;
+
+    private boolean isArray;
 }

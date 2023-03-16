@@ -18,13 +18,16 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class FileProcessor {
 
+    private static final String EXPORT_FOLDER = "export";
+    private static final String FOLDER_SEPARATOR = "/";
+
     private final Configuration freemarkerConfig;
 
     public StringWriter processFreemarkerTemplate(String templateName,
                                                   Map<String, Object> variables) {
 
         var stringWriter = new StringWriter();
-        var template  = getTemplate(templateName);
+        var template = getTemplate(templateName);
 
         try {
             template.process(variables, stringWriter);
@@ -40,6 +43,8 @@ public class FileProcessor {
     public void generate(Map<String, StringWriter> data) {
 
         data.forEach((fileName, fileData) -> {
+
+            fileName = EXPORT_FOLDER + FOLDER_SEPARATOR + fileName;
 
             try {
                 var file = new File(fileName);
