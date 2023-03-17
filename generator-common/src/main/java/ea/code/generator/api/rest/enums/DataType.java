@@ -10,6 +10,7 @@ public enum DataType {
     BOOLEAN,
     DATE,
     DATETIME,
+    OBJECT,
     ;
 
 }

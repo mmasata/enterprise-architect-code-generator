@@ -26,10 +26,56 @@ paths:
     <@handleOperation operation=endpoint.patch/>
   </#if>
   </#list>
+components:
+  schemas:
+  <#list schemas as schema>
+    <@handleSchema schema=schema indent=4/>
+  </#list>
+
+
+<#macro handleSchema schema indent>
+    <#local padding = ""?left_pad(indent)/>
+${padding}${schema.name}:
+<#if schema.isArray()>
+${padding}  type: array
+${padding}  items:
+${padding}    type: ${schema.type}
+    <#local padding = ""?left_pad(indent + 2)/>
+    <#if schema.required??>
+${padding}  required:
+        <#list schema.required as req>
+${padding}    - ${req}
+        </#list>
+    </#if>
+    <#if schema.childs??>
+${padding}  properties:
+        <#list schema.childs as child>
+            <@handleSchema schema=child indent= indent + 6/>
+        </#list>
+    </#if>
+<#else>
+${padding}  type: ${schema.type}
+      <#if schema.required??>
+${padding}  required:
+        <#list schema.required as req>
+${padding}    - ${req}
+        </#list>
+      </#if>
+      <#if schema.childs??>
+${padding}  properties:
+        <#list schema.childs as child>
+            <@handleSchema schema=child indent= indent + 4/>
+        </#list>
+      </#if>
+</#if>
+</#macro>
 
 
 <#macro handleOperation operation>
       operationId: ${operation.operationId}
+      <#if operation.description??>
+      description: ${operation.description}
+      </#if>
       <#if operation.swaggerParameters??>
       parameters:
       <#list operation.swaggerParameters as parameter>
@@ -46,7 +92,7 @@ paths:
       <#if operation.requestSchemaName??>
       requestBody:
         content:
-          ${operation.requestContentType}:
+          application/json:
             <#if operation.isRequestSchemaArray()>
             schema:
               type: array
@@ -62,7 +108,7 @@ paths:
         ${response.code}:
           description: ${response.description}
           content:
-            ${response.contentType}:
+            application/json:
               <#if response.isArray()>
               schema:
                 type: array

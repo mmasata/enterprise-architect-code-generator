@@ -10,6 +10,7 @@ public class SwaggerEndpoint {
     private String operationId;
     private String requestSchemaName;
     private String requestContentType;
+    private String description;
 
     private boolean isRequestSchemaArray;
 

@@ -6,10 +6,7 @@ import lombok.Data;
 @Data
 public class HttpMessage {
 
-    private String modelName;
-    private String contentType;
-
-    private boolean isArray;
+    private DTOPropertyWrapper property;
 
     private HttpMessageType httpMessageType;
 }

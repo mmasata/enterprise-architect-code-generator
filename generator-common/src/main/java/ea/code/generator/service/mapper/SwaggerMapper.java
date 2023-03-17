@@ -1,6 +1,7 @@
 package ea.code.generator.service.mapper;
 
 import ea.code.generator.api.rest.ApiEndpoint;
+import ea.code.generator.api.rest.DTOProperty;
 import ea.code.generator.api.rest.Parameter;
 import ea.code.generator.api.rest.enums.DataType;
 import ea.code.generator.context.GeneratorContext;
@@ -8,11 +9,14 @@ import ea.code.generator.service.freemarker.model.SwaggerEndpoint;
 import ea.code.generator.service.freemarker.model.SwaggerParameter;
 import ea.code.generator.service.freemarker.model.SwaggerPath;
 import ea.code.generator.service.freemarker.model.SwaggerResponse;
+import ea.code.generator.service.freemarker.model.SwaggerSchema;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -27,7 +31,9 @@ public class SwaggerMapper implements Function<GeneratorContext, Map<String, Obj
     @Override
     public Map<String, Object> apply(GeneratorContext generatorContext) {
 
+        var mainSchemasProperties = new HashSet<DTOProperty>();
         var swaggerPaths = new ArrayList<SwaggerPath>();
+
         var restApiResources = generatorContext.getApiResources();
         var configuration = generatorContext.getConfiguration();
 
@@ -40,6 +46,13 @@ public class SwaggerMapper implements Function<GeneratorContext, Map<String, Obj
                 swaggerPathDTO.setPath(restApiResource.getPath() + path);
 
                 endpoints.forEach(endpoint -> {
+
+                    if (endpoint.getRequest() != null) {
+                        mainSchemasProperties.add(endpoint.getRequest().getProperty().getProperty());
+                    }
+
+                    endpoint.getResponses().forEach(((httpStatus, httpMessage) -> mainSchemasProperties.add(httpMessage.getProperty().getProperty())));
+
                     switch (endpoint.getHttpMethod()) {
                         case GET -> swaggerPathDTO.setGet(mapSwaggerEndpoint(endpoint));
                         case POST -> swaggerPathDTO.setPost(mapSwaggerEndpoint(endpoint));
@@ -53,10 +66,59 @@ public class SwaggerMapper implements Function<GeneratorContext, Map<String, Obj
             });
         });
 
+        var swaggerSchemas = mainSchemasProperties.stream()
+                .map(this::mapSwaggerSchema)
+                .toList();
+
         return Map.of("title", SWAGGER_TITLE_FORMATTED.formatted(configuration.getCompany(), configuration.getProject()),
                 "version", configuration.getVersion(),
-                "endpoints", swaggerPaths);
-        //TODO components.schemas
+                "endpoints", swaggerPaths,
+                "schemas", swaggerSchemas);
+    }
+
+    private SwaggerSchema mapSwaggerSchema(DTOProperty dtoProperty) {
+
+        var swaggerDataType = SWAGGER_DATA_TYPE_MAPPER.get(dtoProperty.getDataType());
+        var swaggerSchema = new SwaggerSchema();
+
+        var requiredChilds = new ArrayList<String>();
+        var childs = new ArrayList<SwaggerSchema>();
+
+        swaggerSchema.setName(dtoProperty.getName());
+        swaggerSchema.setType(swaggerDataType.getDataType());
+
+        if (dtoProperty.getChildProperties() != null) {
+            dtoProperty.getChildProperties().forEach((name, childProperty) -> {
+
+                if (childProperty.isRequired()) {
+                    requiredChilds.add(name);
+                }
+
+                var child = mapSwaggerSchema(childProperty.getProperty());
+                child.setName(name);
+                child.setArray(childProperty.isArray());
+
+                childs.add(child);
+            });
+        }
+
+        if (!CollectionUtils.isEmpty(requiredChilds)) {
+            swaggerSchema.setRequired(requiredChilds);
+        }
+
+        if (!CollectionUtils.isEmpty(childs)) {
+            swaggerSchema.setChilds(childs);
+        }
+
+        if (swaggerDataType.getFormat() != null) {
+            swaggerSchema.setFormat(swaggerDataType.getFormat());
+        }
+
+        if (swaggerDataType.getExample() != null) {
+            swaggerSchema.setExample(swaggerDataType.getExample());
+        }
+
+        return swaggerSchema;
     }
 
     private SwaggerEndpoint mapSwaggerEndpoint(ApiEndpoint apiEndpoint) {
@@ -69,10 +131,13 @@ public class SwaggerMapper implements Function<GeneratorContext, Map<String, Obj
         swaggerEndpoint.setOperationId(apiEndpoint.getName());
         swaggerEndpoint.setSwaggerParameters(Stream.of(path, query, header).flatMap(Collection::stream).toList());
 
+        if (apiEndpoint.getDescription() != null) {
+            swaggerEndpoint.setDescription(apiEndpoint.getDescription());
+        }
+
         if (apiEndpoint.getRequest() != null) {
-            swaggerEndpoint.setRequestSchemaName(apiEndpoint.getRequest().getModelName());
-            swaggerEndpoint.setRequestContentType(apiEndpoint.getRequest().getContentType());
-            swaggerEndpoint.setRequestSchemaArray(apiEndpoint.getRequest().isArray());
+            swaggerEndpoint.setRequestSchemaName(apiEndpoint.getRequest().getProperty().getProperty().getName());
+            swaggerEndpoint.setRequestSchemaArray(apiEndpoint.getRequest().getProperty().isArray());
         }
 
         var responses = new ArrayList<SwaggerResponse>();
@@ -80,11 +145,9 @@ public class SwaggerMapper implements Function<GeneratorContext, Map<String, Obj
 
             var swaggerResponse = new SwaggerResponse();
             swaggerResponse.setCode(httpStatus.getCode());
-            swaggerResponse.setSchemaName(httpMessage.getModelName());
-            swaggerResponse.setContentType(httpMessage.getContentType());
             swaggerResponse.setDescription(httpStatus.getDescription());
-            swaggerResponse.setArray(httpMessage.isArray());
-
+            swaggerResponse.setSchemaName(httpMessage.getProperty().getProperty().getName());
+            swaggerResponse.setArray(httpMessage.getProperty().isArray());
             responses.add(swaggerResponse);
         });
         swaggerEndpoint.setSwaggerResponses(responses);
@@ -112,11 +175,11 @@ public class SwaggerMapper implements Function<GeneratorContext, Map<String, Obj
         var swaggerDataType = SWAGGER_DATA_TYPE_MAPPER.get(dataType);
         swaggerParameter.setType(swaggerDataType.getDataType());
 
-        if(swaggerDataType.getFormat() != null) {
+        if (swaggerDataType.getFormat() != null) {
             swaggerParameter.setFormat(swaggerDataType.getFormat());
         }
 
-        if(swaggerDataType.getExample() != null) {
+        if (swaggerDataType.getExample() != null) {
             swaggerParameter.setExample(swaggerDataType.getExample());
         }
     }
