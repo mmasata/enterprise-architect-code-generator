@@ -1,0 +1,181 @@
+openapi: 3.0.3
+info:
+  title: SomeCompany - Dummy
+  version: 1.0.0
+paths:
+  /api/v1/products:
+    get:
+      operationId: getProducts
+      description: Get products V1 Api Endpoint
+      parameters:
+        - name: dateFrom
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: dateTo
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: Content-Type
+          in: header
+          required: false
+          schema:
+            type: string
+      responses:
+        401:
+          description: The request requires authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+        200:
+          description: The request sent by the client was successful.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetProductResponse'
+    post:
+      operationId: createProduct
+      description: Create product V1 Api Endpoint
+      parameters:
+        - name: Content-Type
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DTORoot'
+      responses:
+        401:
+          description: The request requires authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+        200:
+          description: The request sent by the client was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateProductResponse'
+  /api/v1/products/{id}:
+    get:
+      operationId: getProductById
+      description: Get product by ID V1 Api Endpoint
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        401:
+          description: The request requires authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+        200:
+          description: The request sent by the client was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProductDetailResponse'
+components:
+  schemas:
+    CreateProductResponse:
+      type: object
+      required:
+        - createdTime
+      properties:
+        createdTime:
+          type: string
+    GetProductResponse:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        description:
+          type: string
+        id:
+          type: integer
+        name:
+          type: string
+    UnauthorizedResponse:
+      type: object
+      required:
+        - message
+        - errorId
+      properties:
+        message:
+          type: string
+        errorId:
+          type: integer
+    GetProductDetailResponse:
+      type: object
+      required:
+        - validFrom
+        - validTo
+        - id
+        - name
+      properties:
+        validFrom:
+          type: string
+        validTo:
+          type: string
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+    DTORoot:
+      type: object
+      required:
+        - myDTO
+      properties:
+        myDTO:
+          type: array
+          items:
+            type: object
+            required:
+              - from
+              - to
+              - name
+              - child
+            properties:
+              from:
+                type: string
+              to:
+                type: string
+              name:
+                type: array
+                items:
+                  type: string
+              child:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - names
+                    - id
+                  properties:
+                    names:
+                      type: array
+                      items:
+                        type: string
+                    id:
+                      type: integer
+
+

@@ -2,6 +2,7 @@ package ea.code.generator.context.model;
 
 import lombok.Data;
 
+import java.util.Map;
 import java.util.Set;
 
 @Data
@@ -15,5 +16,6 @@ public final class GeneratorConfiguration {
     private DatabaseConnection databaseConnection;
 
     private Set<String> enabledGenerators;
-    //TODO another params
+
+    private Map<String, Object> parameters;
 }

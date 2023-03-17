@@ -8,6 +8,7 @@ import java.util.List;
 public class ApiResource {
 
     private String path;
+    private String name;
 
     private List<ApiEndpoint> endpoints;
 }

@@ -22,7 +22,7 @@ public class MyCustomGenerator {
         System.out.println(generatorContext.getConfiguration().getCompany());
 
         var data = fileProcessor.processFreemarkerTemplate("test.ftlh", Map.of("test", "myCoolCustomValue"));
-        fileProcessor.generate(Map.of("export/myCoolCustomGenerator.txt", data));
+        fileProcessor.generate(Map.of("myCoolCustomGenerator.txt", data));
     }
 
 }

@@ -5,7 +5,16 @@
     "password": "DB_PASSWORD"
   },
   "eaStartPackage": "Api/TestPath",
+  "version": "1.0.0",
   "company": "SomeCompany",
   "project": "Dummy",
-  "enabledGenerators": ["swagger", "test"]
+  "enabledGenerators": [
+    "swagger",
+    "test",
+    "java-rest-records"
+  ],
+  "parameters": {
+    "reactiveJava": true,
+    "javaPackage": "com.myproject.service"
+  }
 }
