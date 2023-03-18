@@ -27,6 +27,6 @@ public interface ${controllerName} {
 }
 
 <#macro handleRequestParams params>
-<#list params as param>           ${param}<#sep>,
+<#list params as param>             ${param}<#sep>,
 </#list>
 </#macro>

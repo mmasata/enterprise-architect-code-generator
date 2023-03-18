@@ -121,12 +121,13 @@ public class JavaRestRecordsMapper implements Function<GeneratorContext, JavaRes
         returnType = METHOD_RETURN_TYPE_WRAPPER.formatted(returnType);
 
         endpoint.setReturnType(returnType);
-        endpoint.setParams(mapEndpointParams(apiEndpoint));
+        endpoint.setParams(mapEndpointParams(apiEndpoint, imports));
 
         return endpoint;
     }
 
-    private List<String> mapEndpointParams(ApiEndpoint apiEndpoint) {
+    private List<String> mapEndpointParams(ApiEndpoint apiEndpoint,
+                                           Set<String> imports) {
 
         var params = new ArrayList<String>();
 
@@ -137,17 +138,35 @@ public class JavaRestRecordsMapper implements Function<GeneratorContext, JavaRes
 
         //queryParams
         apiEndpoint.getQueryParams().forEach(queryParam -> {
-            params.add(REQUEST_PARAM_WRAPPER.formatted("void", queryParam.getName())); //TODO convertor to Java data types
+            var dataType = JAVA_DATA_TYPES_MAPPER.get(queryParam.getDataType());
+            params.add(REQUEST_PARAM_WRAPPER.formatted(dataType.getDataType(), queryParam.getName()));
+            imports.add(IMPORT_REQUEST_PARAM);
+
+            if (dataType.getImportName() != null) {
+                imports.add(dataType.getImportName());
+            }
         });
 
         //pathParams
         apiEndpoint.getPathParams().forEach(pathParam -> {
-            params.add(PATH_PARAM_WRAPPER.formatted("void", pathParam.getName())); //TODO convertor to Java data types
+            var dataType = JAVA_DATA_TYPES_MAPPER.get(pathParam.getDataType());
+            params.add(PATH_PARAM_WRAPPER.formatted(dataType.getDataType(), pathParam.getName()));
+            imports.add(IMPORT_PATH_PARAM);
+
+            if (dataType.getImportName() != null) {
+                imports.add(dataType.getImportName());
+            }
         });
 
         //headers
         apiEndpoint.getHttpHeaders().forEach(header -> {
-            params.add(HEADER_PARAM_WRAPPER.formatted(header.getName(), "void", header.getName())); //TODO convertor to Java data types
+            var dataType = JAVA_DATA_TYPES_MAPPER.get(header.getDataType());
+            params.add(HEADER_PARAM_WRAPPER.formatted(header.getName(), dataType.getDataType(), header.getName()));
+            imports.add(IMPORT_REQUEST_HEADER);
+
+            if (dataType.getImportName() != null) {
+                imports.add(dataType.getImportName());
+            }
         });
 
         return params;

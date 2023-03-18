@@ -1,16 +1,25 @@
 package ea.code.generator.service.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
-@Data
+@Getter
 @AllArgsConstructor
-@NoArgsConstructor
-public class SwaggerDataType {
+public enum SwaggerDataType {
 
-    private String dataType;
-    private String format;
-    private String example;
+    INT32("integer", "int32", "1234"),
+    INT64("integer", "int64", null),
+    FLOAT_NUMBER("number", "float", null),
+    DOUBLE_NUMBER("number", "double", null),
+    STRING("string", null, null),
+    DATE("string", "date", null),
+    DATETIME("string", "date-time", null),
+    BOOLEAN("boolean", null, null),
+    OBJECT("object", null, null),
+    ;
+
+    private final String dataType;
+    private final String format;
+    private final String example;
 
 }

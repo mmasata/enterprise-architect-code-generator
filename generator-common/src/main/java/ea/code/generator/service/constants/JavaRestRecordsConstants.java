@@ -1,6 +1,10 @@
 package ea.code.generator.service.constants;
 
+import ea.code.generator.api.rest.enums.DataType;
+import ea.code.generator.service.model.JavaDataType;
 import lombok.NoArgsConstructor;
+
+import java.util.Map;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -24,4 +28,18 @@ public final class JavaRestRecordsConstants {
     public static final String IMPORT_LIST = "java.util.List";
     public static final String IMPORT_MONO = "reactor.core.publisher.Mono";
     public static final String IMPORT_FLUX = "reactor.core.publisher.Flux";
+    public static final String IMPORT_REQUEST_PARAM = "org.springframework.web.bind.annotations.RequestParam";
+    public static final String IMPORT_PATH_PARAM = "org.springframework.web.bind.annotations.PathVariable";
+    public static final String IMPORT_REQUEST_HEADER = "org.springframework.web.bind.annotations.RequestHeader";
+
+    public static final Map<DataType, JavaDataType> JAVA_DATA_TYPES_MAPPER = Map.of(
+            DataType.INTEGER, JavaDataType.INTEGER,
+            DataType.LONG, JavaDataType.LONG,
+            DataType.FLOAT, JavaDataType.FLOAT,
+            DataType.DOUBLE, JavaDataType.DOUBLE,
+            DataType.STRING, JavaDataType.STRING,
+            DataType.DATE, JavaDataType.DATE,
+            DataType.DATETIME, JavaDataType.DATETIME,
+            DataType.BOOLEAN, JavaDataType.BOOLEAN
+    );
 }

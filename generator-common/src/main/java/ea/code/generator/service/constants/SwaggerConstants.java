@@ -6,22 +6,21 @@ import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
-import static ea.code.generator.api.rest.enums.DataType.*;
 import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
 public final class SwaggerConstants {
 
     public static final Map<DataType, SwaggerDataType> SWAGGER_DATA_TYPE_MAPPER = Map.of(
-            INTEGER, new SwaggerDataType("integer", "int32", "1234"),
-            LONG, new SwaggerDataType("integer", "int64", null),
-            FLOAT, new SwaggerDataType("number", "float", null),
-            DOUBLE, new SwaggerDataType("number", "double", null),
-            STRING, new SwaggerDataType("string", null, null),
-            DATE, new SwaggerDataType("string", "date", null),
-            DATETIME, new SwaggerDataType("string", "date-time", null),
-            BOOLEAN, new SwaggerDataType("boolean", null, null),
-            OBJECT, new SwaggerDataType("object", null, null)
+            DataType.INTEGER, SwaggerDataType.INT32,
+            DataType.LONG, SwaggerDataType.INT64,
+            DataType.FLOAT, SwaggerDataType.FLOAT_NUMBER,
+            DataType.DOUBLE, SwaggerDataType.DOUBLE_NUMBER,
+            DataType.STRING, SwaggerDataType.STRING,
+            DataType.DATE, SwaggerDataType.DATE,
+            DataType.DATETIME, SwaggerDataType.DATETIME,
+            DataType.BOOLEAN, SwaggerDataType.BOOLEAN,
+            DataType.OBJECT, SwaggerDataType.OBJECT
     );
 
     public static final String SWAGGER_TITLE_FORMATTED = "%s - %s";

@@ -7,6 +7,10 @@ import org.springframework.http.ResponseEntity;
 import com.myproject.service.model.CreateProductResponse;
 import com.myproject.service.model.GetProductDetailResponse;
 import com.myproject.service.model.GetProductResponse;
+import java.time.LocalDate;
+import org.springframework.web.bind.annotations.PathVariable;
+import org.springframework.web.bind.annotations.RequestHeader;
+import org.springframework.web.bind.annotations.RequestParam;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -17,9 +21,9 @@ public interface ProductController {
       // Override this method
       @RequestMapping(method=RequestMethod.GET)
       default ResponseEntity<Flux<GetProductResponse>> getProducts (
-           @RequestParam void dateFrom,
-           @RequestParam void dateTo,
-           @RequestHeader("Content-Type") void Content-Type) {
+             @RequestParam LocalDate dateFrom,
+             @RequestParam LocalDate dateTo,
+             @RequestHeader("Content-Type") String Content-Type) {
 
           return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
       }
@@ -27,7 +31,7 @@ public interface ProductController {
       // Override this method
       @RequestMapping(method=RequestMethod.GET, value="/{id}")
       default ResponseEntity<Mono<GetProductDetailResponse>> getProductById (
-           @PathVariable void id) {
+             @PathVariable Integer id) {
 
           return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
       }
@@ -35,8 +39,8 @@ public interface ProductController {
       // Override this method
       @RequestMapping(method=RequestMethod.POST)
       default ResponseEntity<Mono<CreateProductResponse>> createProduct (
-           @RequestBody DTORoot dTORoot,
-           @RequestHeader("Content-Type") void Content-Type) {
+             @RequestBody DTORoot dTORoot,
+             @RequestHeader("Content-Type") String Content-Type) {
 
           return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
       }
