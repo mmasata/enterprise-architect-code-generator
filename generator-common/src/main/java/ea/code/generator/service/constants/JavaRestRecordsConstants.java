@@ -40,6 +40,7 @@ public final class JavaRestRecordsConstants {
             DataType.STRING, JavaDataType.STRING,
             DataType.DATE, JavaDataType.DATE,
             DataType.DATETIME, JavaDataType.DATETIME,
-            DataType.BOOLEAN, JavaDataType.BOOLEAN
+            DataType.BOOLEAN, JavaDataType.BOOLEAN,
+            DataType.BIG_DECIMAL, JavaDataType.BIG_DECIMAL
     );
 }

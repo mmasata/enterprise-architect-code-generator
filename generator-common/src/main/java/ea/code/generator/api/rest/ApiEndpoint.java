@@ -2,12 +2,16 @@ package ea.code.generator.api.rest;
 
 import ea.code.generator.api.rest.enums.HttpMethod;
 import ea.code.generator.api.rest.enums.HttpStatus;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ApiEndpoint {
 
     private String name;

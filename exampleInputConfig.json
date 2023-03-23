@@ -4,6 +4,10 @@
     "user": "DB_USER",
     "password": "DB_PASSWORD"
   },
+  "mappingConfiguration": {
+    "type": "custom",
+    "profile": "test-mapper"
+  },
   "eaStartPackage": "Api/TestPath",
   "version": "1.0.0",
   "company": "SomeCompany",

@@ -12,12 +12,23 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>generator-app</artifactId>
 
+    <properties>
+        <common-collections-version>4.4</common-collections-version>
+    </properties>
+
     <dependencies>
 
         <dependency>
             <groupId>ea.code.generator</groupId>
             <artifactId>generator-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <!-- Apache commons dependencies -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>${common-collections-version}</version>
         </dependency>
 
     </dependencies>

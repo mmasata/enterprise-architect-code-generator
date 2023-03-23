@@ -16,6 +16,7 @@ public enum SwaggerDataType {
     DATETIME("string", "date-time", null),
     BOOLEAN("boolean", null, null),
     OBJECT("object", null, null),
+    BIG_DECIMAL("string", "BigDecimal", null),
     ;
 
     private final String dataType;

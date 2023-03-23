@@ -95,9 +95,9 @@ public final class TestUtils {
                 null,
                 Map.of(OK, mockHttpMessage(new DTOPropertyWrapper(getProductResponseDTO, false, true), RESPONSE),
                         Unauthorized, mockHttpMessage(new DTOPropertyWrapper(unauthorizedResponseDTO, false, false), RESPONSE)),
-                List.of(mockParameter("Content-Type", DataType.STRING, null, null, false)),
+                List.of(mockParameter("Content-Type", DataType.STRING, null, false)),
                 Collections.emptyList(),
-                List.of(mockParameter("dateFrom", DataType.DATE, null, null, true), mockParameter("dateTo", DataType.DATE, null, null, true)));
+                List.of(mockParameter("dateFrom", DataType.DATE, null, true), mockParameter("dateTo", DataType.DATE, null, true)));
 
         var getProductDetailEndpoint = mockApiEndpoint(
                 "getProductById",
@@ -108,7 +108,7 @@ public final class TestUtils {
                 Map.of(OK, mockHttpMessage(new DTOPropertyWrapper(getProductDetailResponseDTO, false, false), RESPONSE),
                         Unauthorized, mockHttpMessage(new DTOPropertyWrapper(unauthorizedResponseDTO, false, false), RESPONSE)),
                 Collections.emptyList(),
-                List.of(mockParameter("id", DataType.INTEGER, null, null, true)),
+                List.of(mockParameter("id", DataType.INTEGER, null, true)),
                 Collections.emptyList());
 
         var createProductEndpoint = mockApiEndpoint(
@@ -119,7 +119,7 @@ public final class TestUtils {
                 mockHttpMessage(new DTOPropertyWrapper(propertyInPropertyDTO, true, false), REQUEST),
                 Map.of(OK, mockHttpMessage(new DTOPropertyWrapper(createProductResponseDTO, false, false), RESPONSE),
                         Unauthorized, mockHttpMessage(new DTOPropertyWrapper(unauthorizedResponseDTO, false, false), RESPONSE)),
-                List.of(mockParameter("Content-Type", DataType.STRING, null, null, true)),
+                List.of(mockParameter("Content-Type", DataType.STRING, null, true)),
                 Collections.emptyList(),
                 Collections.emptyList());
 
@@ -163,14 +163,12 @@ public final class TestUtils {
 
     private static Parameter mockParameter(String name,
                                            DataType dataType,
-                                           String format,
                                            String example,
                                            boolean required) {
 
         var parameter = new Parameter();
         parameter.setName(name);
         parameter.setDataType(dataType);
-        parameter.setFormat(format);
         parameter.setExample(example);
         parameter.setRequired(required);
 

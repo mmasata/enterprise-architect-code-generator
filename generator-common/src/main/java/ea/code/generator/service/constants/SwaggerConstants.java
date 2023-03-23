@@ -20,7 +20,8 @@ public final class SwaggerConstants {
             DataType.DATE, SwaggerDataType.DATE,
             DataType.DATETIME, SwaggerDataType.DATETIME,
             DataType.BOOLEAN, SwaggerDataType.BOOLEAN,
-            DataType.OBJECT, SwaggerDataType.OBJECT
+            DataType.OBJECT, SwaggerDataType.OBJECT,
+            DataType.BIG_DECIMAL, SwaggerDataType.BIG_DECIMAL
     );
 
     public static final String SWAGGER_TITLE_FORMATTED = "%s - %s";

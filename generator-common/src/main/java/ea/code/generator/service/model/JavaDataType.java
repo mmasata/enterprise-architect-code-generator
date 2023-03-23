@@ -15,6 +15,7 @@ public enum JavaDataType {
     DATE("LocalDate", "java.time.LocalDate"),
     DATETIME("LocalDateTime", "java.time.LocalDateTime"),
     BOOLEAN("Boolean", null),
+    BIG_DECIMAL("BigDecimal", "java.math.BigDecimal"),
     ;
 
     private final String dataType;

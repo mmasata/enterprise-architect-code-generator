@@ -13,6 +13,8 @@ public final class GeneratorConfiguration {
     private String project;
     private String version;
 
+    private MappingConfiguration mappingConfiguration;
+
     private DatabaseConnection databaseConnection;
 
     private Set<String> enabledGenerators;

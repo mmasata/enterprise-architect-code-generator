@@ -6,27 +6,21 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "t_object")
-@AttributeOverride(column = @Column(name = "Object_ID"), name = "id")
-public class TObject extends AbstractEntity {
+@Table(name = "t_operation")
+@AttributeOverride(column = @Column(name = "OperationID"), name = "id")
+public class TOperation extends AbstractEntity {
 
     @Column(name = "Name")
     private String name;
 
-    @Column(name = "Object_Type")
+    @Column(name = "Type")
     private String type;
 
     @Column(name = "Stereotype")
     private String stereotype;
 
-    @Column(name = "ea_guid")
-    private String eaGuid;
-
-    @Column(name = "Package_ID")
-    private Long packageId;
-
-    @Column(name = "ParentID")
-    private Long parentObjectId;
+    @Column(name = "Object_ID")
+    private Long objectId;
 
     public String getName() {
         return name;
@@ -40,7 +34,7 @@ public class TObject extends AbstractEntity {
         return stereotype;
     }
 
-    public String getEaGuid() {
-        return eaGuid;
+    public Long getObjectId() {
+        return objectId;
     }
 }

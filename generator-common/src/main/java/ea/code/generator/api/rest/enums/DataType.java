@@ -11,6 +11,7 @@ public enum DataType {
     DATE,
     DATETIME,
     OBJECT,
-    ;
+    UNDEFINED,
+    BIG_DECIMAL,
 
 }
