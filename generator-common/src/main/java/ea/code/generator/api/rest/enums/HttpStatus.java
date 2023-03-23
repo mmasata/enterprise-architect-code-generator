@@ -3,6 +3,8 @@ package ea.code.generator.api.rest.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @AllArgsConstructor
 @Getter
 public enum HttpStatus {
@@ -60,4 +62,12 @@ public enum HttpStatus {
     private final String name;
     private final String description;
 
+    public static HttpStatus findByCode(String code) {
+
+        var intCode = Integer.valueOf(code);
+        return Arrays.stream(HttpStatus.values())
+                .filter(httpStatus -> httpStatus.code.equals(intCode))
+                .findFirst()
+                .orElse(Unknown);
+    }
 }
