@@ -40,6 +40,7 @@ ${padding}${schema.name}:
 ${padding}  type: array
 ${padding}  items:
 ${padding}    type: ${schema.type}
+${padding}    <#if schema.format??>format: ${schema.format}</#if>
     <#local padding = ""?left_pad(indent + 2)/>
     <#if schema.required??>
 ${padding}  required:
@@ -55,6 +56,7 @@ ${padding}  properties:
     </#if>
 <#else>
 ${padding}  type: ${schema.type}
+${padding}  <#if schema.format??>format: ${schema.format}</#if>
       <#if schema.required??>
 ${padding}  required:
         <#list schema.required as req>
