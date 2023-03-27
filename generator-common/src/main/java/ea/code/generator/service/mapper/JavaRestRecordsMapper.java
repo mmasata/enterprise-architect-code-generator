@@ -7,7 +7,6 @@ import ea.code.generator.api.rest.HttpMessage;
 import ea.code.generator.api.rest.enums.DataType;
 import ea.code.generator.api.rest.enums.HttpStatus;
 import ea.code.generator.context.GeneratorContext;
-import ea.code.generator.context.model.GeneratorConfiguration;
 import ea.code.generator.service.freemarker.model.JavaEndpoint;
 import ea.code.generator.service.freemarker.model.JavaParam;
 import ea.code.generator.service.model.JavaRestRecordDTO;
@@ -32,6 +31,7 @@ import static ea.code.generator.service.constants.JavaRestRecordsConstants.IMPOR
 import static ea.code.generator.service.constants.JavaRestRecordsConstants.IMPORT_LIST;
 import static ea.code.generator.service.constants.JavaRestRecordsConstants.IMPORT_MONO;
 import static ea.code.generator.service.constants.JavaRestRecordsConstants.IMPORT_PATH_PARAM;
+import static ea.code.generator.service.constants.JavaRestRecordsConstants.IMPORT_REQUEST_BODY;
 import static ea.code.generator.service.constants.JavaRestRecordsConstants.IMPORT_REQUEST_HEADER;
 import static ea.code.generator.service.constants.JavaRestRecordsConstants.IMPORT_REQUEST_PARAM;
 import static ea.code.generator.service.constants.JavaRestRecordsConstants.JAVA_DATA_TYPES_MAPPER;
@@ -239,14 +239,17 @@ public class JavaRestRecordsMapper implements Function<GeneratorContext, JavaRes
         if (apiEndpoint.getRequest() != null) {
             var objectName = apiEndpoint.getRequest().getProperty().getProperty().getName();
             params.add(REQUEST_BODY_WRAPPER.formatted(objectName, objectNameToVariableName(objectName)));
+
+            imports.add(IMPORT_REQUEST_BODY);
+            imports.add(modelPackage + "." + objectName);
         }
 
         //queryParams
         apiEndpoint.getQueryParams().forEach(queryParam -> {
             var dataType = JAVA_DATA_TYPES_MAPPER.get(queryParam.getDataType());
             params.add(REQUEST_PARAM_WRAPPER.formatted(dataType.getDataType(), queryParam.getName()));
-            imports.add(IMPORT_REQUEST_PARAM);
 
+            imports.add(IMPORT_REQUEST_PARAM);
             if (dataType.getImportName() != null) {
                 imports.add(dataType.getImportName());
             }
@@ -256,8 +259,8 @@ public class JavaRestRecordsMapper implements Function<GeneratorContext, JavaRes
         apiEndpoint.getPathParams().forEach(pathParam -> {
             var dataType = JAVA_DATA_TYPES_MAPPER.get(pathParam.getDataType());
             params.add(PATH_PARAM_WRAPPER.formatted(dataType.getDataType(), pathParam.getName()));
-            imports.add(IMPORT_PATH_PARAM);
 
+            imports.add(IMPORT_PATH_PARAM);
             if (dataType.getImportName() != null) {
                 imports.add(dataType.getImportName());
             }

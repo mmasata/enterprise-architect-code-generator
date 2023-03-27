@@ -42,6 +42,7 @@ public final class JavaRestRecordsConstants {
 
     public static final String JAVA_RECORDS_FREEMARKER_TEMPLATE_FILE = "javaRecordDTO.ftlh";
     public static final String JAVA_REST_CONTROLLER_FREEMARKER_TEMPLATE_FILE = "javaRestController.ftlh";
+    public static final String JAVA_POM_FREEMARKER_TEMPLATE_FILE = "pom.ftlh";
     public static final String JAVA_REST_CONTROLLER_PACKAGE = "rest";
     public static final String JAVA_MODEL_PACKAGE = "model";
     public static final String REACTIVE_ARRAY = "Flux";
@@ -57,9 +58,10 @@ public final class JavaRestRecordsConstants {
     public static final String IMPORT_LIST = "java.util.List";
     public static final String IMPORT_MONO = "reactor.core.publisher.Mono";
     public static final String IMPORT_FLUX = "reactor.core.publisher.Flux";
-    public static final String IMPORT_REQUEST_PARAM = "org.springframework.web.bind.annotations.RequestParam";
-    public static final String IMPORT_PATH_PARAM = "org.springframework.web.bind.annotations.PathVariable";
-    public static final String IMPORT_REQUEST_HEADER = "org.springframework.web.bind.annotations.RequestHeader";
+    public static final String IMPORT_REQUEST_PARAM = "org.springframework.web.bind.annotation.RequestParam";
+    public static final String IMPORT_PATH_PARAM = "org.springframework.web.bind.annotation.PathVariable";
+    public static final String IMPORT_REQUEST_HEADER = "org.springframework.web.bind.annotation.RequestHeader";
+    public static final String IMPORT_REQUEST_BODY = "org.springframework.web.bind.annotation.RequestBody;";
 
     public static final String CONTROLLER_MODE_REACTIVE = "REACTIVE";
     public static final String CONTROLLER_MODE_STANDARD = "STANDARD";

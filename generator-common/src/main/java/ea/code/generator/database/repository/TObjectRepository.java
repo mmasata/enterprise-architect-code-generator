@@ -14,4 +14,6 @@ public interface TObjectRepository extends JpaRepository<TObject, Long> {
 
     Optional<TObject> findById(Long id);
 
+    Optional<TObject> findByEaGuid(String eaGuid);
+
 }

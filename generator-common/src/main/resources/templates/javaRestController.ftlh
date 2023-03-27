@@ -1,8 +1,9 @@
 <#ftl output_format="plainText">
 package ${package};
 
-import org.springframework.web.bind.annotations.RestController;
-import org.springframework.web.bind.annotations.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 <#list imports as import>
