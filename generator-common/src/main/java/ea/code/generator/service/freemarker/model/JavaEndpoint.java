@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class JavaRestRecordEndpoint {
+public class JavaEndpoint {
 
     private String httpMethod;
     private String path;

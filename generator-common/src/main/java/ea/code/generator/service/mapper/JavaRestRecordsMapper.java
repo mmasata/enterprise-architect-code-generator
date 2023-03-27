@@ -2,11 +2,14 @@ package ea.code.generator.service.mapper;
 
 import ea.code.generator.api.rest.ApiEndpoint;
 import ea.code.generator.api.rest.ApiResource;
+import ea.code.generator.api.rest.DTOProperty;
 import ea.code.generator.api.rest.HttpMessage;
+import ea.code.generator.api.rest.enums.DataType;
 import ea.code.generator.api.rest.enums.HttpStatus;
 import ea.code.generator.context.GeneratorContext;
 import ea.code.generator.context.model.GeneratorConfiguration;
-import ea.code.generator.service.freemarker.model.JavaRestRecordEndpoint;
+import ea.code.generator.service.freemarker.model.JavaEndpoint;
+import ea.code.generator.service.freemarker.model.JavaParam;
 import ea.code.generator.service.model.JavaRestRecordDTO;
 import ea.code.generator.service.model.JavaRestRecordVariableDTO;
 import org.apache.commons.lang3.StringUtils;
@@ -14,14 +17,33 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Function;
 
-import static ea.code.generator.service.constants.JavaRestRecordsConstants.*;
+import static ea.code.generator.service.constants.JavaRestRecordsConstants.ERROR_STATUSES;
+import static ea.code.generator.service.constants.JavaRestRecordsConstants.HEADER_PARAM_WRAPPER;
+import static ea.code.generator.service.constants.JavaRestRecordsConstants.IMPORT_FLUX;
+import static ea.code.generator.service.constants.JavaRestRecordsConstants.IMPORT_LIST;
+import static ea.code.generator.service.constants.JavaRestRecordsConstants.IMPORT_MONO;
+import static ea.code.generator.service.constants.JavaRestRecordsConstants.IMPORT_PATH_PARAM;
+import static ea.code.generator.service.constants.JavaRestRecordsConstants.IMPORT_REQUEST_HEADER;
+import static ea.code.generator.service.constants.JavaRestRecordsConstants.IMPORT_REQUEST_PARAM;
+import static ea.code.generator.service.constants.JavaRestRecordsConstants.JAVA_DATA_TYPES_MAPPER;
+import static ea.code.generator.service.constants.JavaRestRecordsConstants.JAVA_MODEL_PACKAGE;
+import static ea.code.generator.service.constants.JavaRestRecordsConstants.JAVA_REST_CONTROLLER_PACKAGE;
+import static ea.code.generator.service.constants.JavaRestRecordsConstants.METHOD_REACTIVE_OR_ARR_WRAPPER;
+import static ea.code.generator.service.constants.JavaRestRecordsConstants.METHOD_RETURN_TYPE_WRAPPER;
+import static ea.code.generator.service.constants.JavaRestRecordsConstants.NON_REACTIVE_ARRAY;
+import static ea.code.generator.service.constants.JavaRestRecordsConstants.PATH_PARAM_WRAPPER;
+import static ea.code.generator.service.constants.JavaRestRecordsConstants.REACTIVE_ARRAY;
+import static ea.code.generator.service.constants.JavaRestRecordsConstants.REACTIVE_OBJECT;
+import static ea.code.generator.service.constants.JavaRestRecordsConstants.REQUEST_BODY_WRAPPER;
+import static ea.code.generator.service.constants.JavaRestRecordsConstants.REQUEST_PARAM_WRAPPER;
 
 @Component
 public class JavaRestRecordsMapper implements Function<GeneratorContext, JavaRestRecordVariableDTO> {
@@ -29,33 +51,109 @@ public class JavaRestRecordsMapper implements Function<GeneratorContext, JavaRes
     @Override
     public JavaRestRecordVariableDTO apply(GeneratorContext generatorContext) {
 
-        return new JavaRestRecordVariableDTO(mapToRestControllers(generatorContext),
-                mapToJavaRecords(generatorContext));
+        var params = generatorContext.getConfiguration().getParameters();
+        var basePackage = params.containsKey("javaPackage")
+                ? params.get("javaPackage") + "."
+                : StringUtils.EMPTY;
+        var restPackage = basePackage + JAVA_REST_CONTROLLER_PACKAGE;
+        var modelPackage = basePackage + JAVA_MODEL_PACKAGE;
+
+        return new JavaRestRecordVariableDTO(mapToRestControllers(restPackage, generatorContext),
+                mapToJavaRecords(modelPackage, generatorContext));
     }
 
-    private List<JavaRestRecordDTO> mapToRestControllers(GeneratorContext generatorContext) {
+    private List<JavaRestRecordDTO> mapToRestControllers(String restPackage,
+                                                         GeneratorContext generatorContext) {
 
         return generatorContext.getApiResources().stream()
-                .map(apiResource -> mapToRestController(generatorContext, apiResource))
+                .map(apiResource -> mapToRestController(restPackage, generatorContext, apiResource))
                 .toList();
     }
 
-    private List<JavaRestRecordDTO> mapToJavaRecords(GeneratorContext generatorContext) {
+    private List<JavaRestRecordDTO> mapToJavaRecords(String modelPackage,
+                                                     GeneratorContext generatorContext) {
 
-        //TODO create DTO classes
-        return Collections.emptyList();
+        var records = new ArrayList<JavaRestRecordDTO>();
+        var createdRecords = new HashSet<String>();
+
+        var endpoints = generatorContext.getApiResources().stream()
+                .map(ApiResource::getEndpoints)
+                .flatMap(Collection::stream)
+                .toList();
+
+        endpoints.forEach(endpoint -> {
+            if (endpoint.getRequest() != null) {
+                handleRestRecord(modelPackage,
+                        records,
+                        createdRecords,
+                        endpoint.getRequest().getProperty().getProperty());
+            }
+
+            endpoint.getResponses().forEach((httpStatus, httpMessage) -> handleRestRecord(modelPackage,
+                    records,
+                    createdRecords,
+                    httpMessage.getProperty().getProperty()));
+        });
+        return records;
     }
 
-    private JavaRestRecordDTO mapToRestController(GeneratorContext generatorContext,
+    private void handleRestRecord(String modelPackage,
+                                  List<JavaRestRecordDTO> records,
+                                  Set<String> createdRecords,
+                                  DTOProperty property) {
+
+        if (createdRecords.contains(property.getName())) { //redundant
+            return;
+        }
+
+        createdRecords.add(property.getName());
+
+        var record = new JavaRestRecordDTO();
+        record.setFolder(modelPackage.replaceAll("\\.", "/"));
+        record.setFileName(property.getName());
+        record
+                .addVariable("package", modelPackage)
+                .addVariable("recordName", property.getName());
+
+        var recordParams = new ArrayList<JavaParam>();
+        var imports = new TreeSet<String>();
+        property.getChildProperties().forEach((name, wrapper) -> {
+
+            var childProperty = wrapper.getProperty();
+            var childJavaDataType = JAVA_DATA_TYPES_MAPPER.get(childProperty.getDataType());
+
+            var isObject = childProperty.getDataType() == DataType.OBJECT;
+            var attributeName = isObject
+                    ? childProperty.getName()
+                    : childJavaDataType.getDataType();
+
+            if (wrapper.isArray()) {
+                imports.add(IMPORT_LIST);
+                attributeName = METHOD_REACTIVE_OR_ARR_WRAPPER.formatted(NON_REACTIVE_ARRAY, attributeName);
+            }
+
+            if (isObject) {
+                handleRestRecord(modelPackage, records, createdRecords, childProperty);
+            }
+
+            if (childJavaDataType != null && childJavaDataType.getImportName() != null) {
+                imports.add(childJavaDataType.getImportName());
+            }
+
+            recordParams.add(new JavaParam(attributeName, name));
+        });
+
+        record
+                .addVariable("recordParams", recordParams)
+                .addVariable("imports", imports);
+        records.add(record);
+    }
+
+    private JavaRestRecordDTO mapToRestController(String restPackage,
+                                                  GeneratorContext generatorContext,
                                                   ApiResource apiResource) {
 
         var config = generatorContext.getConfiguration();
-        var javaPackage = (String) config.getParameters().get("javaPackage");
-
-        javaPackage = (StringUtils.isEmpty(javaPackage))
-                ? JAVA_REST_CONTROLLER_PACKAGE
-                : javaPackage + "." + JAVA_REST_CONTROLLER_PACKAGE;
-
         var imports = new TreeSet<String>();
         var endpoints = apiResource.getEndpoints().stream()
                 .map(apiEndpoint -> mapToRestEndpoint(apiEndpoint, config, imports))
@@ -63,10 +161,10 @@ public class JavaRestRecordsMapper implements Function<GeneratorContext, JavaRes
 
         var dto = new JavaRestRecordDTO();
         dto.setFileName(apiResource.getName());
-        dto.setFolder(javaPackage.replaceAll("\\.", "/"));
+        dto.setFolder(restPackage.replaceAll("\\.", "/"));
 
         dto
-                .addVariable("package", javaPackage)
+                .addVariable("package", restPackage)
                 .addVariable("basePath", apiResource.getPath())
                 .addVariable("controllerName", apiResource.getName())
                 .addVariable("imports", imports)
@@ -75,9 +173,9 @@ public class JavaRestRecordsMapper implements Function<GeneratorContext, JavaRes
         return dto;
     }
 
-    private JavaRestRecordEndpoint mapToRestEndpoint(ApiEndpoint apiEndpoint,
-                                                     GeneratorConfiguration config,
-                                                     Set<String> imports) {
+    private JavaEndpoint mapToRestEndpoint(ApiEndpoint apiEndpoint,
+                                           GeneratorConfiguration config,
+                                           Set<String> imports) {
 
         var javaModelPackage = (String) config.getParameters().get("javaPackage");
         javaModelPackage = (StringUtils.isEmpty(javaModelPackage))
@@ -90,7 +188,7 @@ public class JavaRestRecordsMapper implements Function<GeneratorContext, JavaRes
         var isReactive = (Boolean) config.getParameters().get("reactiveJava");
         var response = getRelevantResponse(apiEndpoint.getResponses());
 
-        var endpoint = new JavaRestRecordEndpoint();
+        var endpoint = new JavaEndpoint();
         endpoint.setHttpMethod(apiEndpoint.getHttpMethod().name());
         endpoint.setPath(path);
         endpoint.setMethodName(apiEndpoint.getName());
@@ -176,11 +274,7 @@ public class JavaRestRecordsMapper implements Function<GeneratorContext, JavaRes
     private HttpMessage getRelevantResponse(Map<HttpStatus, HttpMessage> responses) {
 
         for (var response : responses.entrySet()) {
-
-            //find first which is not error
-            if (response.getKey().getCode() >= 100
-                    && response.getKey().getCode() < 400) {
-
+            if (!ERROR_STATUSES.contains(response.getKey())) {
                 return response.getValue();
             }
         }

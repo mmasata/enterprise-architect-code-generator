@@ -56,9 +56,8 @@ ${padding}  properties:
     </#if>
 <#else>
 ${padding}  type: ${schema.type}
-${padding}  <#if schema.format??>format: ${schema.format}</#if>
-      <#if schema.required??>
-${padding}  required:
+<#if schema.format??>${padding}  format: ${schema.format}</#if>
+<#if schema.required??>${padding}  required:
         <#list schema.required as req>
 ${padding}    - ${req}
         </#list>

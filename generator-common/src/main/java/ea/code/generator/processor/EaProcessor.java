@@ -3,6 +3,7 @@ package ea.code.generator.processor;
 import ea.code.generator.annotations.CustomGeneratorMapper;
 import ea.code.generator.annotations.RunMapper;
 import ea.code.generator.context.GeneratorContext;
+import ea.code.generator.validator.CommonApiValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
@@ -23,6 +24,8 @@ public class EaProcessor {
 
     private final ApplicationContext springContext;
 
+    private final CommonApiValidator commonApiValidator;
+
     public void run() {
 
         log.trace("Running EAProcessor.");
@@ -32,6 +35,8 @@ public class EaProcessor {
             case CUSTOM -> invokeCustomMapper(mappingConfig.getProfile());
             case GENERIC -> invokeGenericMapper();
         }
+
+        commonApiValidator.validate(generatorContext);
     }
 
     private void invokeCustomMapper(String profile) {

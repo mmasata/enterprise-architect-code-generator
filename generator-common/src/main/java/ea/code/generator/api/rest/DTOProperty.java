@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Data
@@ -16,6 +17,14 @@ public class DTOProperty {
 
     private DataType dataType;
 
-    private Map<String, DTOPropertyWrapper> childProperties;
+    private Map<String, DTOPropertyWrapper> childProperties = new HashMap<>();
+
+
+    public DTOProperty addProperty(String key,
+                                   DTOPropertyWrapper value) {
+
+        childProperties.put(key, value);
+        return this;
+    }
 
 }

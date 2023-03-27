@@ -1,11 +1,40 @@
 package ea.code.generator.service.constants;
 
 import ea.code.generator.api.rest.enums.DataType;
+import ea.code.generator.api.rest.enums.HttpStatus;
 import ea.code.generator.service.model.JavaDataType;
 import lombok.NoArgsConstructor;
 
 import java.util.Map;
+import java.util.Set;
 
+import static ea.code.generator.api.rest.enums.HttpStatus.BadGateway;
+import static ea.code.generator.api.rest.enums.HttpStatus.BadRequest;
+import static ea.code.generator.api.rest.enums.HttpStatus.Conflict;
+import static ea.code.generator.api.rest.enums.HttpStatus.ExpectationFailed;
+import static ea.code.generator.api.rest.enums.HttpStatus.Forbidden;
+import static ea.code.generator.api.rest.enums.HttpStatus.GatewayTimeout;
+import static ea.code.generator.api.rest.enums.HttpStatus.GenericClientError;
+import static ea.code.generator.api.rest.enums.HttpStatus.GenericServerError;
+import static ea.code.generator.api.rest.enums.HttpStatus.Gone;
+import static ea.code.generator.api.rest.enums.HttpStatus.HttpVersionNotSupported;
+import static ea.code.generator.api.rest.enums.HttpStatus.ImATeapot;
+import static ea.code.generator.api.rest.enums.HttpStatus.InternalServerError;
+import static ea.code.generator.api.rest.enums.HttpStatus.LengthRequired;
+import static ea.code.generator.api.rest.enums.HttpStatus.MethodNotAllowed;
+import static ea.code.generator.api.rest.enums.HttpStatus.NotAcceptable;
+import static ea.code.generator.api.rest.enums.HttpStatus.NotFound;
+import static ea.code.generator.api.rest.enums.HttpStatus.NotImplemented;
+import static ea.code.generator.api.rest.enums.HttpStatus.PaymentRequired;
+import static ea.code.generator.api.rest.enums.HttpStatus.PreconditionFailed;
+import static ea.code.generator.api.rest.enums.HttpStatus.ProxyAuthenticationRequired;
+import static ea.code.generator.api.rest.enums.HttpStatus.RequestEntityTooLarge;
+import static ea.code.generator.api.rest.enums.HttpStatus.RequestRangeNotSatisfiable;
+import static ea.code.generator.api.rest.enums.HttpStatus.RequestTimeout;
+import static ea.code.generator.api.rest.enums.HttpStatus.RequestedURITooLong;
+import static ea.code.generator.api.rest.enums.HttpStatus.ServiceUnavailable;
+import static ea.code.generator.api.rest.enums.HttpStatus.Unauthorized;
+import static ea.code.generator.api.rest.enums.HttpStatus.UnsupportedMediaType;
 import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
@@ -31,6 +60,12 @@ public final class JavaRestRecordsConstants {
     public static final String IMPORT_REQUEST_PARAM = "org.springframework.web.bind.annotations.RequestParam";
     public static final String IMPORT_PATH_PARAM = "org.springframework.web.bind.annotations.PathVariable";
     public static final String IMPORT_REQUEST_HEADER = "org.springframework.web.bind.annotations.RequestHeader";
+
+    public static final Set<HttpStatus> ERROR_STATUSES = Set.of(BadRequest, Unauthorized, PaymentRequired,
+            Forbidden, NotFound, MethodNotAllowed, NotAcceptable, ProxyAuthenticationRequired, RequestTimeout,
+            Conflict, Gone, LengthRequired, PreconditionFailed, RequestEntityTooLarge, RequestedURITooLong, UnsupportedMediaType,
+            RequestRangeNotSatisfiable, ExpectationFailed, ImATeapot, InternalServerError, NotImplemented, BadGateway, ServiceUnavailable,
+            GatewayTimeout, HttpVersionNotSupported, GenericClientError, GenericServerError);
 
     public static final Map<DataType, JavaDataType> JAVA_DATA_TYPES_MAPPER = Map.of(
             DataType.INTEGER, JavaDataType.INTEGER,
