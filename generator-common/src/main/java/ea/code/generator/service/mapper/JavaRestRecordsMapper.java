@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Function;
 
+import static ea.code.generator.service.constants.JavaRestRecordsConstants.CONTROLLER_MODE_REACTIVE;
 import static ea.code.generator.service.constants.JavaRestRecordsConstants.ERROR_STATUSES;
 import static ea.code.generator.service.constants.JavaRestRecordsConstants.HEADER_PARAM_WRAPPER;
 import static ea.code.generator.service.constants.JavaRestRecordsConstants.IMPORT_FLUX;
@@ -48,6 +49,9 @@ import static ea.code.generator.service.constants.JavaRestRecordsConstants.REQUE
 @Component
 public class JavaRestRecordsMapper implements Function<GeneratorContext, JavaRestRecordVariableDTO> {
 
+    private String modelPackage = null;
+    private String restPackage = null;
+
     @Override
     public JavaRestRecordVariableDTO apply(GeneratorContext generatorContext) {
 
@@ -55,50 +59,56 @@ public class JavaRestRecordsMapper implements Function<GeneratorContext, JavaRes
         var basePackage = params.containsKey("javaPackage")
                 ? params.get("javaPackage") + "."
                 : StringUtils.EMPTY;
-        var restPackage = basePackage + JAVA_REST_CONTROLLER_PACKAGE;
-        var modelPackage = basePackage + JAVA_MODEL_PACKAGE;
+        restPackage = basePackage + JAVA_REST_CONTROLLER_PACKAGE;
+        modelPackage = basePackage + JAVA_MODEL_PACKAGE;
 
-        return new JavaRestRecordVariableDTO(mapToRestControllers(restPackage, generatorContext),
-                mapToJavaRecords(modelPackage, generatorContext));
+        var apiResources = generatorContext.getApiResources();
+        return new JavaRestRecordVariableDTO(mapToRestControllers(generatorContext),
+                mapToJavaRecords(apiResources));
     }
 
-    private List<JavaRestRecordDTO> mapToRestControllers(String restPackage,
-                                                         GeneratorContext generatorContext) {
+    private List<JavaRestRecordDTO> mapToRestControllers(GeneratorContext generatorContext) {
 
-        return generatorContext.getApiResources().stream()
-                .map(apiResource -> mapToRestController(restPackage, generatorContext, apiResource))
-                .toList();
+        var controllers = new ArrayList<JavaRestRecordDTO>();
+        var controllerTypes = (List<String>) generatorContext.getConfiguration().getParameters().get("javaControllerTypes");
+
+        controllerTypes.forEach(controllerMode -> {
+
+            var typeOfControllers = generatorContext.getApiResources().stream()
+                    .map(apiResource -> mapToRestController(controllerMode, apiResource))
+                    .toList();
+
+            controllers.addAll(typeOfControllers);
+        });
+
+        return controllers;
     }
 
-    private List<JavaRestRecordDTO> mapToJavaRecords(String modelPackage,
-                                                     GeneratorContext generatorContext) {
+    private List<JavaRestRecordDTO> mapToJavaRecords(List<ApiResource> apiResources) {
 
         var records = new ArrayList<JavaRestRecordDTO>();
         var createdRecords = new HashSet<String>();
 
-        var endpoints = generatorContext.getApiResources().stream()
+        var endpoints = apiResources.stream()
                 .map(ApiResource::getEndpoints)
                 .flatMap(Collection::stream)
                 .toList();
 
         endpoints.forEach(endpoint -> {
             if (endpoint.getRequest() != null) {
-                handleRestRecord(modelPackage,
-                        records,
+                handleRestRecord(records,
                         createdRecords,
                         endpoint.getRequest().getProperty().getProperty());
             }
 
-            endpoint.getResponses().forEach((httpStatus, httpMessage) -> handleRestRecord(modelPackage,
-                    records,
+            endpoint.getResponses().forEach((httpStatus, httpMessage) -> handleRestRecord(records,
                     createdRecords,
                     httpMessage.getProperty().getProperty()));
         });
         return records;
     }
 
-    private void handleRestRecord(String modelPackage,
-                                  List<JavaRestRecordDTO> records,
+    private void handleRestRecord(List<JavaRestRecordDTO> records,
                                   Set<String> createdRecords,
                                   DTOProperty property) {
 
@@ -133,7 +143,7 @@ public class JavaRestRecordsMapper implements Function<GeneratorContext, JavaRes
             }
 
             if (isObject) {
-                handleRestRecord(modelPackage, records, createdRecords, childProperty);
+                handleRestRecord(records, createdRecords, childProperty);
             }
 
             if (childJavaDataType != null && childJavaDataType.getImportName() != null) {
@@ -149,24 +159,26 @@ public class JavaRestRecordsMapper implements Function<GeneratorContext, JavaRes
         records.add(record);
     }
 
-    private JavaRestRecordDTO mapToRestController(String restPackage,
-                                                  GeneratorContext generatorContext,
+    private JavaRestRecordDTO mapToRestController(String controllerMode,
                                                   ApiResource apiResource) {
 
-        var config = generatorContext.getConfiguration();
         var imports = new TreeSet<String>();
+        var isReactive = CONTROLLER_MODE_REACTIVE.equalsIgnoreCase(controllerMode);
         var endpoints = apiResource.getEndpoints().stream()
-                .map(apiEndpoint -> mapToRestEndpoint(apiEndpoint, config, imports))
+                .map(apiEndpoint -> mapToRestEndpoint(apiEndpoint, imports, controllerMode))
                 .toList();
 
+        var name = isReactive
+                ? apiResource.getName() + "Reactive"
+                : apiResource.getName() + "Standard";
         var dto = new JavaRestRecordDTO();
-        dto.setFileName(apiResource.getName());
+        dto.setFileName(name);
         dto.setFolder(restPackage.replaceAll("\\.", "/"));
 
         dto
                 .addVariable("package", restPackage)
                 .addVariable("basePath", apiResource.getPath())
-                .addVariable("controllerName", apiResource.getName())
+                .addVariable("controllerName", name)
                 .addVariable("imports", imports)
                 .addVariable("endpoints", endpoints);
 
@@ -174,18 +186,13 @@ public class JavaRestRecordsMapper implements Function<GeneratorContext, JavaRes
     }
 
     private JavaEndpoint mapToRestEndpoint(ApiEndpoint apiEndpoint,
-                                           GeneratorConfiguration config,
-                                           Set<String> imports) {
-
-        var javaModelPackage = (String) config.getParameters().get("javaPackage");
-        javaModelPackage = (StringUtils.isEmpty(javaModelPackage))
-                ? JAVA_MODEL_PACKAGE
-                : javaModelPackage + "." + JAVA_MODEL_PACKAGE;
+                                           Set<String> imports,
+                                           String controllerMode) {
 
         var path = (StringUtils.isEmpty(apiEndpoint.getPath()))
                 ? null
                 : apiEndpoint.getPath();
-        var isReactive = (Boolean) config.getParameters().get("reactiveJava");
+        var isReactive = CONTROLLER_MODE_REACTIVE.equalsIgnoreCase(controllerMode);
         var response = getRelevantResponse(apiEndpoint.getResponses());
 
         var endpoint = new JavaEndpoint();
@@ -198,7 +205,7 @@ public class JavaRestRecordsMapper implements Function<GeneratorContext, JavaRes
 
             var isArray = response.getProperty().isArray();
             var type = response.getProperty().getProperty().getName();
-            imports.add(javaModelPackage + "." + type);
+            imports.add(modelPackage + "." + type);
 
             if (isReactive && isArray) {
                 returnType = METHOD_REACTIVE_OR_ARR_WRAPPER.formatted(REACTIVE_ARRAY, type);

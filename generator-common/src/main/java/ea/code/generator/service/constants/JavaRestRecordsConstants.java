@@ -61,6 +61,9 @@ public final class JavaRestRecordsConstants {
     public static final String IMPORT_PATH_PARAM = "org.springframework.web.bind.annotations.PathVariable";
     public static final String IMPORT_REQUEST_HEADER = "org.springframework.web.bind.annotations.RequestHeader";
 
+    public static final String CONTROLLER_MODE_REACTIVE = "REACTIVE";
+    public static final String CONTROLLER_MODE_STANDARD = "STANDARD";
+
     public static final Set<HttpStatus> ERROR_STATUSES = Set.of(BadRequest, Unauthorized, PaymentRequired,
             Forbidden, NotFound, MethodNotAllowed, NotAcceptable, ProxyAuthenticationRequired, RequestTimeout,
             Conflict, Gone, LengthRequired, PreconditionFailed, RequestEntityTooLarge, RequestedURITooLong, UnsupportedMediaType,

@@ -19,7 +19,6 @@ public class DTOProperty {
 
     private Map<String, DTOPropertyWrapper> childProperties = new HashMap<>();
 
-
     public DTOProperty addProperty(String key,
                                    DTOPropertyWrapper value) {
 
