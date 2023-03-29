@@ -2,8 +2,12 @@ package ea.code.generator.database.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
 
+@Getter
 @Entity
 @Table(name = "t_attribute")
 public class TAttribute extends AbstractEntity {
@@ -20,26 +24,8 @@ public class TAttribute extends AbstractEntity {
     @Column(name = "`Default`")
     private String initValue;
 
-    @Column(name = "Object_ID")
-    private Long objectId;
+    @ManyToOne
+    @JoinColumn(name = "Object_ID")
+    private TObject object;
 
-    public String getName() {
-        return name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getStereotype() {
-        return stereotype;
-    }
-
-    public String getInitValue() {
-        return initValue;
-    }
-
-    public Long getObjectId() {
-        return objectId;
-    }
 }

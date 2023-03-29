@@ -3,8 +3,15 @@ package ea.code.generator.database.entity;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Getter;
 
+import java.util.List;
+
+@Getter
 @Entity
 @Table(name = "t_object")
 @AttributeOverride(column = @Column(name = "Object_ID"), name = "id")
@@ -28,19 +35,16 @@ public class TObject extends AbstractEntity {
     @Column(name = "ParentID")
     private Long parentObjectId;
 
-    public String getName() {
-        return name;
-    }
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Object_ID")
+    private List<TAttribute> attributes;
 
-    public String getType() {
-        return type;
-    }
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Start_Object_ID")
+    private List<TConnector> sourceConns;
 
-    public String getStereotype() {
-        return stereotype;
-    }
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "End_Object_ID")
+    private List<TConnector> endConns;
 
-    public String getEaGuid() {
-        return eaGuid;
-    }
 }

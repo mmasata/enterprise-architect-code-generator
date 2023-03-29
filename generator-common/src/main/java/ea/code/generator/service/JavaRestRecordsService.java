@@ -7,9 +7,12 @@ import ea.code.generator.processor.FileProcessor;
 import ea.code.generator.service.mapper.JavaRestRecordsMapper;
 import ea.code.generator.service.model.JavaRestRecordDTO;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
+import static ea.code.generator.service.constants.JavaRestRecordsConstants.JAVA_MODEL_PACKAGE;
+import static ea.code.generator.service.constants.JavaRestRecordsConstants.JAVA_PACKAGE_INFO_FREEMARKER_TEMPLATE_FILE;
 import static ea.code.generator.service.constants.JavaRestRecordsConstants.JAVA_POM_FREEMARKER_TEMPLATE_FILE;
 import static ea.code.generator.service.constants.JavaRestRecordsConstants.JAVA_RECORDS_FREEMARKER_TEMPLATE_FILE;
 import static ea.code.generator.service.constants.JavaRestRecordsConstants.JAVA_REST_CONTROLLER_FREEMARKER_TEMPLATE_FILE;
@@ -35,6 +38,20 @@ public class JavaRestRecordsService {
         javaRestRecordVariableDTO.getRecords().forEach(javaRecord -> processJavaFile(projectBaseJava, JAVA_RECORDS_FREEMARKER_TEMPLATE_FILE, javaRecord));
 
         processPom();
+        processPackageInfo(projectBaseJava);
+    }
+
+    private void processPackageInfo(String javaBase) {
+
+        var params = generatorContext.getConfiguration().getParameters();
+        var basePackage = params.containsKey("javaPackage")
+                ? params.get("javaPackage") + "."
+                : StringUtils.EMPTY;
+        var modelPackage = (basePackage + JAVA_MODEL_PACKAGE);
+        var modelFolder = modelPackage.replaceAll("\\.", "/");
+
+        var data = fileProcessor.processFreemarkerTemplate(JAVA_PACKAGE_INFO_FREEMARKER_TEMPLATE_FILE, Map.of("modelPackage", modelPackage));
+        fileProcessor.generate(Map.of(javaBase + "/" + modelFolder + "/package-info.java", data));
     }
 
     private void processPom() {

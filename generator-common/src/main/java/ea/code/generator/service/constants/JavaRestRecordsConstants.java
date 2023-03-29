@@ -43,6 +43,7 @@ public final class JavaRestRecordsConstants {
     public static final String JAVA_RECORDS_FREEMARKER_TEMPLATE_FILE = "javaRecordDTO.ftlh";
     public static final String JAVA_REST_CONTROLLER_FREEMARKER_TEMPLATE_FILE = "javaRestController.ftlh";
     public static final String JAVA_POM_FREEMARKER_TEMPLATE_FILE = "pom.ftlh";
+    public static final String JAVA_PACKAGE_INFO_FREEMARKER_TEMPLATE_FILE = "package-info.ftlh";
     public static final String JAVA_REST_CONTROLLER_PACKAGE = "rest";
     public static final String JAVA_MODEL_PACKAGE = "model";
     public static final String REACTIVE_ARRAY = "Flux";
@@ -55,6 +56,7 @@ public final class JavaRestRecordsConstants {
     public static final String PATH_PARAM_WRAPPER = "@PathVariable %s %s";
     public static final String HEADER_PARAM_WRAPPER = "@RequestHeader(\"%s\") %s %s";
 
+    public static final String IMPORT_NULLABLE = "org.springframework.lang.Nullable";
     public static final String IMPORT_LIST = "java.util.List";
     public static final String IMPORT_MONO = "reactor.core.publisher.Mono";
     public static final String IMPORT_FLUX = "reactor.core.publisher.Flux";

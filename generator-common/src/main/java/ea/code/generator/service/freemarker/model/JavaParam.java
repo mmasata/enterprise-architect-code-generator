@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class JavaParam {
 
+    private boolean isNullable;
+
     private String type;
     private String name;
 }

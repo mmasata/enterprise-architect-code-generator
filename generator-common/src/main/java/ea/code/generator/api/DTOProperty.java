@@ -1,4 +1,4 @@
-package ea.code.generator.api.rest;
+package ea.code.generator.api;
 
 import ea.code.generator.api.rest.enums.DataType;
 import lombok.AllArgsConstructor;

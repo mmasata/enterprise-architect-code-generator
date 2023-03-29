@@ -2,8 +2,8 @@ package ea.code.generator;
 
 import ea.code.generator.api.rest.ApiEndpoint;
 import ea.code.generator.api.rest.ApiResource;
-import ea.code.generator.api.rest.DTOProperty;
-import ea.code.generator.api.rest.DTOPropertyWrapper;
+import ea.code.generator.api.DTOProperty;
+import ea.code.generator.api.DTOPropertyWrapper;
 import ea.code.generator.api.rest.HttpMessage;
 import ea.code.generator.api.rest.Parameter;
 import ea.code.generator.api.rest.enums.DataType;

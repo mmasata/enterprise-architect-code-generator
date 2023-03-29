@@ -9,6 +9,6 @@ public record ${recordName}(
 <@handleRecordParams params=recordParams/>){}
 
 <#macro handleRecordParams params>
-<#list params as param>         ${param.type} ${param.name}<#sep>,
+<#list params as param>        <#if param.isNullable()> @Nullable</#if> ${param.type} ${param.name}<#sep>,
 </#list>
 </#macro>

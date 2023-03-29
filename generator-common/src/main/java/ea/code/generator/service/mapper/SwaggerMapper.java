@@ -1,7 +1,7 @@
 package ea.code.generator.service.mapper;
 
 import ea.code.generator.api.rest.ApiEndpoint;
-import ea.code.generator.api.rest.DTOProperty;
+import ea.code.generator.api.DTOProperty;
 import ea.code.generator.api.rest.Parameter;
 import ea.code.generator.api.rest.enums.DataType;
 import ea.code.generator.context.GeneratorContext;

@@ -3,9 +3,9 @@ package ea.code.generator.database.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @MappedSuperclass
 public abstract class AbstractEntity {
 

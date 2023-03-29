@@ -45,7 +45,13 @@ public class FrameworkProcessor {
                 .forEach(method -> {
                     try {
                         log.info("Running {}.{}() code generator.", bean.getClass().getName(), method.getName());
+
+                        var startTime = System.currentTimeMillis();
                         method.invoke(bean);
+                        var endTime = System.currentTimeMillis();
+                        var timeElapsed = endTime - startTime;
+
+                        log.info("[{}] Took {}ms.", bean.getClass().getName(), timeElapsed);
                     } catch (IllegalAccessException | InvocationTargetException e) {
                         throw new RuntimeException(e);
                     }

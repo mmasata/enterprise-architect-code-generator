@@ -44,6 +44,7 @@ public class EaProcessor {
         var mapperBeans = springContext.getBeansWithAnnotation(CustomGeneratorMapper.class);
         var mapperBean = mapperBeans.keySet().stream()
                 .map(mapperBeans::get)
+                .filter(bean -> bean.getClass().getAnnotation(CustomGeneratorMapper.class) != null)
                 .filter(bean -> bean.getClass().getAnnotation(CustomGeneratorMapper.class).name().equalsIgnoreCase(profile))
                 .findFirst()
                 .orElse(null);
@@ -59,7 +60,13 @@ public class EaProcessor {
 
                     try {
                         log.info("Running {}.{}() mapper.", mapperBean.getClass().getName(), method.getName());
+
+                        var startTime = System.currentTimeMillis();
                         method.invoke(mapperBean);
+                        var endTime = System.currentTimeMillis();
+                        var timeElapsed = endTime - startTime;
+
+                        log.info("[{}] Took {}ms.", mapperBean.getClass().getName(), timeElapsed);
                     } catch (IllegalAccessException | InvocationTargetException e) {
                         log.error("Cannot invoke {}.{}", mapperBean.getClass().getName(), method.getName());
                         throw new RuntimeException(e);

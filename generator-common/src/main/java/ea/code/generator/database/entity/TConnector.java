@@ -3,10 +3,15 @@ package ea.code.generator.database.entity;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
 
 import java.io.Serializable;
 
+@Getter
 @Entity
 @Table(name = "t_connector")
 @AttributeOverride(column = @Column(name = "Connector_ID"), name = "id")
@@ -27,37 +32,12 @@ public class TConnector extends AbstractEntity implements Serializable {
     @Column(name = "DestCard")
     private String destCard;
 
-    @Column(name = "Start_Object_ID")
-    private Long startObjectId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Start_Object_ID")
+    private TObject startObject;
 
-    @Column(name = "End_Object_ID")
-    private Long endObjectId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "End_Object_ID")
+    private TObject endObject;
 
-    public String getName() {
-        return name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getStereotype() {
-        return stereotype;
-    }
-
-    public String getSrcCard() {
-        return srcCard;
-    }
-
-    public String getDestCard() {
-        return destCard;
-    }
-
-    public Long getStartObjectId() {
-        return startObjectId;
-    }
-
-    public Long getEndObjectId() {
-        return endObjectId;
-    }
 }

@@ -1,8 +1,8 @@
 package ea.code.generator.service.mapper;
 
+import ea.code.generator.api.DTOProperty;
 import ea.code.generator.api.rest.ApiEndpoint;
 import ea.code.generator.api.rest.ApiResource;
-import ea.code.generator.api.rest.DTOProperty;
 import ea.code.generator.api.rest.HttpMessage;
 import ea.code.generator.api.rest.enums.DataType;
 import ea.code.generator.api.rest.enums.HttpStatus;
@@ -30,6 +30,7 @@ import static ea.code.generator.service.constants.JavaRestRecordsConstants.HEADE
 import static ea.code.generator.service.constants.JavaRestRecordsConstants.IMPORT_FLUX;
 import static ea.code.generator.service.constants.JavaRestRecordsConstants.IMPORT_LIST;
 import static ea.code.generator.service.constants.JavaRestRecordsConstants.IMPORT_MONO;
+import static ea.code.generator.service.constants.JavaRestRecordsConstants.IMPORT_NULLABLE;
 import static ea.code.generator.service.constants.JavaRestRecordsConstants.IMPORT_PATH_PARAM;
 import static ea.code.generator.service.constants.JavaRestRecordsConstants.IMPORT_REQUEST_BODY;
 import static ea.code.generator.service.constants.JavaRestRecordsConstants.IMPORT_REQUEST_HEADER;
@@ -73,7 +74,6 @@ public class JavaRestRecordsMapper implements Function<GeneratorContext, JavaRes
         var controllerTypes = (List<String>) generatorContext.getConfiguration().getParameters().get("javaControllerTypes");
 
         controllerTypes.forEach(controllerMode -> {
-
             var typeOfControllers = generatorContext.getApiResources().stream()
                     .map(apiResource -> mapToRestController(controllerMode, apiResource))
                     .toList();
@@ -142,6 +142,10 @@ public class JavaRestRecordsMapper implements Function<GeneratorContext, JavaRes
                 attributeName = METHOD_REACTIVE_OR_ARR_WRAPPER.formatted(NON_REACTIVE_ARRAY, attributeName);
             }
 
+            if (!wrapper.isRequired()) {
+                imports.add(IMPORT_NULLABLE);
+            }
+
             if (isObject) {
                 handleRestRecord(records, createdRecords, childProperty);
             }
@@ -150,7 +154,7 @@ public class JavaRestRecordsMapper implements Function<GeneratorContext, JavaRes
                 imports.add(childJavaDataType.getImportName());
             }
 
-            recordParams.add(new JavaParam(attributeName, name));
+            recordParams.add(new JavaParam(!wrapper.isRequired(), attributeName, name));
         });
 
         record

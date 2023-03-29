@@ -1,4 +1,4 @@
-package ea.code.generator.api.rest;
+package ea.code.generator.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
