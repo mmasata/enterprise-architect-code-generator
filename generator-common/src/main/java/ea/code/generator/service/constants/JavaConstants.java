@@ -2,7 +2,7 @@ package ea.code.generator.service.constants;
 
 import ea.code.generator.api.rest.enums.DataType;
 import ea.code.generator.api.rest.enums.HttpStatus;
-import ea.code.generator.service.model.JavaDataType;
+import ea.code.generator.service.model.enums.JavaDataType;
 import lombok.NoArgsConstructor;
 
 import java.util.Map;
@@ -38,14 +38,21 @@ import static ea.code.generator.api.rest.enums.HttpStatus.UnsupportedMediaType;
 import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
-public final class JavaRestRecordsConstants {
+public final class JavaConstants {
 
     public static final String JAVA_RECORDS_FREEMARKER_TEMPLATE_FILE = "javaRecordDTO.ftlh";
+    public static final String JAVA_LOMBOK_DTO_FREEMARKER_TEMPLATE_FILE = "javaLombokDTO.ftlh";
     public static final String JAVA_REST_CONTROLLER_FREEMARKER_TEMPLATE_FILE = "javaRestController.ftlh";
     public static final String JAVA_POM_FREEMARKER_TEMPLATE_FILE = "pom.ftlh";
     public static final String JAVA_PACKAGE_INFO_FREEMARKER_TEMPLATE_FILE = "package-info.ftlh";
+
+    public static final String JAVA_PACKAGE_PARAM = "javaPackage";
+    public static final String JAVA_PROJECT_NAME = "javaProjectName";
+    public static final String JAVA_FILE_OUTPUT_PATTERN = "%s/%s/%s.java";
+    public static final String JAVA_PROJECT_MAIN_PATTERN = "%s/src/main/java";
     public static final String JAVA_REST_CONTROLLER_PACKAGE = "rest";
     public static final String JAVA_MODEL_PACKAGE = "model";
+
     public static final String REACTIVE_ARRAY = "Flux";
     public static final String NON_REACTIVE_ARRAY = "List";
     public static final String REACTIVE_OBJECT = "Mono";

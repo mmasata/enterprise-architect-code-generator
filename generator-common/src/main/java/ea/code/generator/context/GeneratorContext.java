@@ -1,5 +1,6 @@
 package ea.code.generator.context;
 
+import ea.code.generator.api.DTOProperty;
 import ea.code.generator.api.rest.ApiResource;
 import ea.code.generator.context.model.GeneratorConfiguration;
 import lombok.Data;
@@ -14,5 +15,6 @@ public class GeneratorContext {
 
     private List<ApiResource> apiResources = Collections.emptyList();
 
-    //TODO Kafka and DTO models at future
+    private List<DTOProperty> dtoObjects = Collections.emptyList();
+
 }

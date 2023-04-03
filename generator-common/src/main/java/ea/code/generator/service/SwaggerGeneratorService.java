@@ -13,7 +13,7 @@ import static ea.code.generator.service.constants.SwaggerConstants.SWAGGER_FREEM
 
 @GenerateCode(name = "swagger")
 @RequiredArgsConstructor
-public class SwaggerService {
+public class SwaggerGeneratorService {
 
     private final GeneratorContext generatorContext;
 

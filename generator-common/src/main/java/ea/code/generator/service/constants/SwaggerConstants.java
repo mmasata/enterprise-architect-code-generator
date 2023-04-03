@@ -1,7 +1,7 @@
 package ea.code.generator.service.constants;
 
 import ea.code.generator.api.rest.enums.DataType;
-import ea.code.generator.service.model.SwaggerDataType;
+import ea.code.generator.service.model.enums.SwaggerDataType;
 import lombok.NoArgsConstructor;
 
 import java.util.Map;

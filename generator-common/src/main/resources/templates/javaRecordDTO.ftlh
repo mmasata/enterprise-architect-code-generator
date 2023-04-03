@@ -5,8 +5,8 @@ package ${package};
 import ${import};
 </#list>
 
-public record ${recordName}(
-<@handleRecordParams params=recordParams/>){}
+public record ${className}(
+<@handleRecordParams params=javaParams/>){}
 
 <#macro handleRecordParams params>
 <#list params as param>        <#if param.isNullable()> @Nullable</#if> ${param.type} ${param.name}<#sep>,

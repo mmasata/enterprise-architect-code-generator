@@ -31,4 +31,20 @@
 
     </dependencies>
 
+    <#if repoId?? && repoUrl??>
+
+    <distributionManagement>
+        <repository>
+            <id>${repoId}</id>
+            <url>${repoUrl}</url>
+        </repository>
+
+        <snapshotRepository>
+            <id>${repoId}</id>
+            <url>${repoUrl}</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    </#if>
+
 </project>

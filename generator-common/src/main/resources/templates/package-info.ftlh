@@ -1,4 +1,4 @@
 @NonNullApi
-package ${modelPackage}
+package ${modelPackage};
 
 import org.springframework.lang.NonNullApi;

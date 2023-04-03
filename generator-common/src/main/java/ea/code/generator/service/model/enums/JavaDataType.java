@@ -1,4 +1,4 @@
-package ea.code.generator.service.model;
+package ea.code.generator.service.model.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
