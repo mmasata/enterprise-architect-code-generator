@@ -17,6 +17,7 @@ public enum SwaggerDataType {
     BOOLEAN("boolean", null, null),
     OBJECT("object", null, null),
     BIG_DECIMAL("string", "BigDecimal", null),
+    ENUM("string", null, null),
     ;
 
     private final String dataType;

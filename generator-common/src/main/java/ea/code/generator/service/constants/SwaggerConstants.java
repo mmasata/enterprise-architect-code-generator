@@ -6,25 +6,26 @@ import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
+import static java.util.Map.entry;
 import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
 public final class SwaggerConstants {
 
-    public static final Map<DataType, SwaggerDataType> SWAGGER_DATA_TYPE_MAPPER = Map.of(
-            DataType.INTEGER, SwaggerDataType.INT32,
-            DataType.LONG, SwaggerDataType.INT64,
-            DataType.FLOAT, SwaggerDataType.FLOAT_NUMBER,
-            DataType.DOUBLE, SwaggerDataType.DOUBLE_NUMBER,
-            DataType.STRING, SwaggerDataType.STRING,
-            DataType.DATE, SwaggerDataType.DATE,
-            DataType.DATETIME, SwaggerDataType.DATETIME,
-            DataType.BOOLEAN, SwaggerDataType.BOOLEAN,
-            DataType.OBJECT, SwaggerDataType.OBJECT,
-            DataType.BIG_DECIMAL, SwaggerDataType.BIG_DECIMAL
+    public static final Map<DataType, SwaggerDataType> SWAGGER_DATA_TYPE_MAPPER = Map.ofEntries(
+            entry(DataType.INTEGER, SwaggerDataType.INT32),
+            entry(DataType.LONG, SwaggerDataType.INT64),
+            entry(DataType.FLOAT, SwaggerDataType.FLOAT_NUMBER),
+            entry(DataType.DOUBLE, SwaggerDataType.DOUBLE_NUMBER),
+            entry(DataType.STRING, SwaggerDataType.STRING),
+            entry(DataType.DATE, SwaggerDataType.DATE),
+            entry(DataType.DATETIME, SwaggerDataType.DATETIME),
+            entry(DataType.BOOLEAN, SwaggerDataType.BOOLEAN),
+            entry(DataType.OBJECT, SwaggerDataType.OBJECT),
+            entry(DataType.BIG_DECIMAL, SwaggerDataType.BIG_DECIMAL),
+            entry(DataType.ENUM, SwaggerDataType.ENUM)
     );
 
-    public static final String SWAGGER_TITLE_FORMATTED = "%s - %s";
     public static final String SWAGGER_FREEMARKER_TEMPLATE_FILE = "swagger.ftlh";
 
 }

@@ -79,35 +79,60 @@ public class JavaDTOMapper implements Function<GeneratorContext, List<JavaFileDT
 
             var childProperty = wrapper.getProperty();
             var childJavaDataType = JAVA_DATA_TYPES_MAPPER.get(childProperty.getDataType());
-
-            var isObject = childProperty.getDataType() == DataType.OBJECT;
-            var attributeName = isObject
+            var attributeDataType = childProperty.getDataType() == DataType.OBJECT
+                    || childProperty.getDataType() == DataType.ENUM
                     ? childProperty.getName()
                     : childJavaDataType.getDataType();
 
             if (wrapper.isArray()) {
                 imports.add(IMPORT_LIST);
-                attributeName = METHOD_REACTIVE_OR_ARR_WRAPPER.formatted(NON_REACTIVE_ARRAY, attributeName);
+                attributeDataType = METHOD_REACTIVE_OR_ARR_WRAPPER.formatted(NON_REACTIVE_ARRAY, attributeDataType);
             }
 
             if (!wrapper.isRequired()) {
                 imports.add(IMPORT_NULLABLE);
             }
 
-            if (isObject) {
+            if (childProperty.getDataType() == DataType.OBJECT) {
                 handleDTO(DTOObjects, createdDTOs, childProperty);
+            }
+
+            if (childProperty.getDataType() == DataType.ENUM) {
+                handleEnum(DTOObjects, createdDTOs, childProperty);
             }
 
             if (childJavaDataType != null && childJavaDataType.getImportName() != null) {
                 imports.add(childJavaDataType.getImportName());
             }
 
-            javaParams.add(new JavaParam(!wrapper.isRequired(), attributeName, name));
+            javaParams.add(new JavaParam(!wrapper.isRequired(), attributeDataType, name));
         });
 
         DTOObject
                 .addVariable("javaParams", javaParams)
                 .addVariable("imports", imports);
+        DTOObjects.add(DTOObject);
+    }
+
+    private void handleEnum(List<JavaFileDTO> DTOObjects,
+                            Set<String> createdDTOs,
+                            DTOProperty property) {
+
+        if (createdDTOs.contains(property.getName())) { //redundant
+            return;
+        }
+
+        createdDTOs.add(property.getName());
+
+        var DTOObject = new JavaFileDTO();
+        DTOObject.setFolder(javaHelper.getModelFolder());
+        DTOObject.setFileName(property.getName());
+        DTOObject
+                .addVariable("package", javaHelper.getModelPackage())
+                .addVariable("className", property.getName())
+                .addVariable("isEnum", Boolean.TRUE)
+                .addVariable("enumValues", property.getEnumValues());
+
         DTOObjects.add(DTOObject);
     }
 

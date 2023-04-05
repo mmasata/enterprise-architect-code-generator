@@ -32,7 +32,6 @@ components:
     <@handleSchema schema=schema indent=4/>
   </#list>
 
-
 <#macro handleSchema schema indent>
     <#local padding = ""?left_pad(indent)/>
 ${padding}${schema.name}:
@@ -40,15 +39,16 @@ ${padding}${schema.name}:
 ${padding}  type: array
 ${padding}  items:
 ${padding}    type: ${schema.type}
+<#if (schema.enumValues?size > 0)>${padding}    enum: [<#list schema.enumValues as enumValue>${enumValue}<#sep>,</#list>]</#if>
 ${padding}    <#if schema.format??>format: ${schema.format}</#if>
     <#local padding = ""?left_pad(indent + 2)/>
-    <#if schema.required??>
+    <#if (schema.required?size>0)>
 ${padding}  required:
         <#list schema.required as req>
 ${padding}    - ${req}
         </#list>
     </#if>
-    <#if schema.childs??>
+    <#if (schema.childs?size >0)>
 ${padding}  properties:
         <#list schema.childs as child>
             <@handleSchema schema=child indent= indent + 6/>
@@ -56,13 +56,14 @@ ${padding}  properties:
     </#if>
 <#else>
 ${padding}  type: ${schema.type}
+<#if (schema.enumValues?size > 0)>${padding}  enum: [<#list schema.enumValues as enumValue>${enumValue}<#sep>,</#list>]</#if>
 <#if schema.format??>${padding}  format: ${schema.format}</#if>
-<#if schema.required??>${padding}  required:
+<#if (schema.required?size > 0)>${padding}  required:
         <#list schema.required as req>
 ${padding}    - ${req}
         </#list>
       </#if>
-      <#if schema.childs??>
+      <#if (schema.childs?size > 0)>
 ${padding}  properties:
         <#list schema.childs as child>
             <@handleSchema schema=child indent= indent + 4/>
@@ -77,7 +78,7 @@ ${padding}  properties:
       <#if operation.description??>
       description: ${operation.description}
       </#if>
-      <#if operation.swaggerParameters??>
+      <#if (operation.swaggerParameters?size > 0)>
       parameters:
       <#list operation.swaggerParameters as parameter>
         - name: ${parameter.name}

@@ -9,6 +9,7 @@ import ea.code.generator.service.mapper.JavaRestControllerMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import static ea.code.generator.service.constants.JavaConstants.JAVA_ENUM_FREEMARKER_TEMPLATE_FILE;
 import static ea.code.generator.service.constants.JavaConstants.JAVA_LOMBOK_DTO_FREEMARKER_TEMPLATE_FILE;
 import static ea.code.generator.service.constants.JavaConstants.JAVA_RECORDS_FREEMARKER_TEMPLATE_FILE;
 import static ea.code.generator.service.constants.JavaConstants.JAVA_REST_CONTROLLER_FREEMARKER_TEMPLATE_FILE;
@@ -30,7 +31,7 @@ public class JavaGeneratorService {
     public void run() {
 
         var params = generatorContext.getConfiguration().getParameters();
-        var DTOFreemarkerTemplate = "RECORDS".equalsIgnoreCase((String) params.get("javaDtoTypes"))
+        var DTOFreemarkerTemplate = "RECORDS".equalsIgnoreCase((String) params.get("javaDtoType"))
                 ? JAVA_RECORDS_FREEMARKER_TEMPLATE_FILE
                 : JAVA_LOMBOK_DTO_FREEMARKER_TEMPLATE_FILE;
 
@@ -38,7 +39,15 @@ public class JavaGeneratorService {
                 .forEach(restController -> javaHelper.createJavaFile(JAVA_REST_CONTROLLER_FREEMARKER_TEMPLATE_FILE, restController));
 
         javaDTOMapper.apply(generatorContext)
-                .forEach(javaRecord -> javaHelper.createJavaFile(DTOFreemarkerTemplate, javaRecord));
+                .forEach(javaDTO -> {
+
+                    if (javaDTO.getFreemarkerVariables().containsKey("isEnum")
+                            && javaDTO.getFreemarkerVariables().get("isEnum").equals(Boolean.TRUE)) {
+                        javaHelper.createJavaFile(JAVA_ENUM_FREEMARKER_TEMPLATE_FILE, javaDTO);
+                    } else {
+                        javaHelper.createJavaFile(DTOFreemarkerTemplate, javaDTO);
+                    }
+                });
 
         javaHelper.createPom();
         javaHelper.createPackageInfo();

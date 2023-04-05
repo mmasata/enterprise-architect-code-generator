@@ -20,6 +20,7 @@ import static ea.code.generator.service.constants.JavaConstants.JAVA_POM_FREEMAR
 import static ea.code.generator.service.constants.JavaConstants.JAVA_PROJECT_MAIN_PATTERN;
 import static ea.code.generator.service.constants.JavaConstants.JAVA_PROJECT_NAME;
 import static ea.code.generator.service.constants.JavaConstants.JAVA_REST_CONTROLLER_PACKAGE;
+import static ea.code.generator.service.constants.JavaConstants.JAVA_VERSION_PARAM;
 
 @Slf4j
 @Component
@@ -83,11 +84,12 @@ public class JavaHelper {
         var params = config.getParameters();
 
         var javaProjectName = ConfigUtils.getConfigParameterOrNull(params, JAVA_PROJECT_NAME);
+        var javaVersion = ConfigUtils.getConfigParameterOrNull(params, JAVA_VERSION_PARAM);
         var javaGroupId = ConfigUtils.getConfigParameterOrNull(params, "javaGroupId");
         var version = config.getVersion();
 
-        if (ObjectUtils.anyNull(javaProjectName, javaGroupId, version)) {
-            log.error("[java-generator] - javaProjectName, javaGroupId, version and javaPackage are required fields! Some of them is missing");
+        if (ObjectUtils.anyNull(javaProjectName, javaGroupId, javaVersion, version)) {
+            log.error("[java-generator] - javaProjectName, javaGroupId, javaVersion, version and javaPackage are required fields! Some of them is missing");
             return;
         }
 
@@ -96,6 +98,7 @@ public class JavaHelper {
         pomVariables.put("artifactId", javaProjectName);
         pomVariables.put("version", version);
         pomVariables.put("name", javaProjectName);
+        pomVariables.put("javaVersion", javaVersion);
         pomVariables.put("repoId", ConfigUtils.getConfigParameterOrNull(params, "javaDistributionManagementRepoId"));
         pomVariables.put("repoUrl", ConfigUtils.getConfigParameterOrNull(params, "javaDistributionManagementRepoUrl"));
 

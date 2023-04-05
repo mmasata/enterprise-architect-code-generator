@@ -10,8 +10,9 @@ public enum DataType {
     BOOLEAN,
     DATE,
     DATETIME,
-    OBJECT,
-    UNDEFINED,
     BIG_DECIMAL,
+    OBJECT,
+    ENUM,
+    UNDEFINED,
 
 }

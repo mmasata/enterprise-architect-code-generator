@@ -1,15 +1,15 @@
 package ea.code.generator.service.mapper;
 
-import ea.code.generator.api.rest.ApiEndpoint;
 import ea.code.generator.api.DTOProperty;
+import ea.code.generator.api.rest.ApiEndpoint;
 import ea.code.generator.api.rest.Parameter;
-import ea.code.generator.api.rest.enums.DataType;
 import ea.code.generator.context.GeneratorContext;
 import ea.code.generator.service.freemarker.model.SwaggerEndpoint;
 import ea.code.generator.service.freemarker.model.SwaggerParameter;
 import ea.code.generator.service.freemarker.model.SwaggerPath;
 import ea.code.generator.service.freemarker.model.SwaggerResponse;
 import ea.code.generator.service.freemarker.model.SwaggerSchema;
+import ea.code.generator.service.model.enums.SwaggerDataType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -23,7 +23,6 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static ea.code.generator.service.constants.SwaggerConstants.SWAGGER_DATA_TYPE_MAPPER;
-import static ea.code.generator.service.constants.SwaggerConstants.SWAGGER_TITLE_FORMATTED;
 
 @Component
 public class SwaggerMapper implements Function<GeneratorContext, Map<String, Object>> {
@@ -36,6 +35,7 @@ public class SwaggerMapper implements Function<GeneratorContext, Map<String, Obj
 
         var restApiResources = generatorContext.getApiResources();
         var configuration = generatorContext.getConfiguration();
+        var parameters = configuration.getParameters();
 
         restApiResources.forEach(restApiResource -> {
 
@@ -70,7 +70,7 @@ public class SwaggerMapper implements Function<GeneratorContext, Map<String, Obj
                 .map(this::mapSwaggerSchema)
                 .toList();
 
-        return Map.of("title", SWAGGER_TITLE_FORMATTED.formatted(configuration.getCompany(), configuration.getProject()),
+        return Map.of("title", parameters.get("swaggerTitle"),
                 "version", configuration.getVersion(),
                 "endpoints", swaggerPaths,
                 "schemas", swaggerSchemas);
@@ -87,7 +87,7 @@ public class SwaggerMapper implements Function<GeneratorContext, Map<String, Obj
         swaggerSchema.setName(dtoProperty.getName());
         swaggerSchema.setType(swaggerDataType.getDataType());
 
-        if (dtoProperty.getChildProperties() != null) {
+        if (!CollectionUtils.isEmpty(dtoProperty.getChildProperties())) {
             dtoProperty.getChildProperties().forEach((name, childProperty) -> {
 
                 if (childProperty.isRequired()) {
@@ -100,6 +100,10 @@ public class SwaggerMapper implements Function<GeneratorContext, Map<String, Obj
 
                 childs.add(child);
             });
+        }
+
+        if (swaggerDataType == SwaggerDataType.ENUM) {
+            swaggerSchema.setEnumValues(dtoProperty.getEnumValues());
         }
 
         if (!CollectionUtils.isEmpty(requiredChilds)) {
@@ -164,15 +168,7 @@ public class SwaggerMapper implements Function<GeneratorContext, Map<String, Obj
         swaggerParameter.setIn(type);
         swaggerParameter.setRequired(parameter.isRequired());
 
-
-        handleSwaggerDataType(swaggerParameter, parameter.getDataType());
-        return swaggerParameter;
-    }
-
-    private void handleSwaggerDataType(SwaggerParameter swaggerParameter,
-                                       DataType dataType) {
-
-        var swaggerDataType = SWAGGER_DATA_TYPE_MAPPER.get(dataType);
+        var swaggerDataType = SWAGGER_DATA_TYPE_MAPPER.get(parameter.getDataType());
         swaggerParameter.setType(swaggerDataType.getDataType());
 
         if (swaggerDataType.getFormat() != null) {
@@ -182,6 +178,7 @@ public class SwaggerMapper implements Function<GeneratorContext, Map<String, Obj
         if (swaggerDataType.getExample() != null) {
             swaggerParameter.setExample(swaggerDataType.getExample());
         }
+        return swaggerParameter;
     }
 
     private Map<String, List<ApiEndpoint>> groupEndpointsByPath(List<ApiEndpoint> apiEndpoints) {

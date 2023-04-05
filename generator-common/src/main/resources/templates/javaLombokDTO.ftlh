@@ -8,12 +8,13 @@ import ${import};
 
 @Data
 public class ${className} {
-<@handleDtoParams params=javaParams/>;
+<@handleDtoParams params=javaParams/>
+
 }
 
 <#macro handleDtoParams params>
 <#list params as param>    <#if param.isNullable()>
     @Nullable</#if>
-    private ${param.type} ${param.name}<#sep>,
+    private ${param.type} ${param.name};<#sep>
     </#list>
 </#macro>

@@ -8,17 +8,25 @@
     "type": "custom",
     "profile": "test-mapper"
   },
-  "eaStartPackage": "Api/TestPath",
+  "eaStartPackage": "Api.TestPath",
   "version": "1.0.0",
-  "company": "SomeCompany",
-  "project": "Dummy",
   "enabledGenerators": [
     "swagger",
     "test",
     "java-rest-records"
   ],
   "parameters": {
-    "javaControllerTypes" : ["REACTIVE", "STANDARD"],
-    "javaPackage": "com.myproject.service"
+    "swaggerTitle" : "Swagger title of API",
+    "javaDistributionManagementRepoId": "repo-name",
+    "javaDistributionManagementRepoUrl": "https://www.example.com/repo",
+    "javaDtoType": "RECORDS",
+    "javaControllerTypes": [
+      "REACTIVE",
+      "STANDARD"
+    ],
+    "javaVersion": "17",
+    "javaGroupId": "cz.com.example",
+    "javaProjectName": "example-app-interfaces",
+    "javaPackage": "cz.com.example.app.generated"
   }
 }

@@ -9,13 +9,19 @@
     <name>${name}</name>
 
     <properties>
-        <java.version>17</java.version>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <java.version>${javaVersion}</java.version>
+        <maven.compiler.source>${javaVersion}</maven.compiler.source>
+        <maven.compiler.target>${javaVersion}</maven.compiler.target>
     </properties>
 
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.26</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

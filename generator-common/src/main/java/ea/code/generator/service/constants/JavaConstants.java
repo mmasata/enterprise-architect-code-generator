@@ -35,6 +35,7 @@ import static ea.code.generator.api.rest.enums.HttpStatus.RequestedURITooLong;
 import static ea.code.generator.api.rest.enums.HttpStatus.ServiceUnavailable;
 import static ea.code.generator.api.rest.enums.HttpStatus.Unauthorized;
 import static ea.code.generator.api.rest.enums.HttpStatus.UnsupportedMediaType;
+import static java.util.Map.entry;
 import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
@@ -43,9 +44,11 @@ public final class JavaConstants {
     public static final String JAVA_RECORDS_FREEMARKER_TEMPLATE_FILE = "javaRecordDTO.ftlh";
     public static final String JAVA_LOMBOK_DTO_FREEMARKER_TEMPLATE_FILE = "javaLombokDTO.ftlh";
     public static final String JAVA_REST_CONTROLLER_FREEMARKER_TEMPLATE_FILE = "javaRestController.ftlh";
+    public static final String JAVA_ENUM_FREEMARKER_TEMPLATE_FILE = "javaEnumDTO.ftlh";
     public static final String JAVA_POM_FREEMARKER_TEMPLATE_FILE = "pom.ftlh";
     public static final String JAVA_PACKAGE_INFO_FREEMARKER_TEMPLATE_FILE = "package-info.ftlh";
 
+    public static final String JAVA_VERSION_PARAM = "javaVersion";
     public static final String JAVA_PACKAGE_PARAM = "javaPackage";
     public static final String JAVA_PROJECT_NAME = "javaProjectName";
     public static final String JAVA_FILE_OUTPUT_PATTERN = "%s/%s/%s.java";
@@ -81,15 +84,17 @@ public final class JavaConstants {
             RequestRangeNotSatisfiable, ExpectationFailed, ImATeapot, InternalServerError, NotImplemented, BadGateway, ServiceUnavailable,
             GatewayTimeout, HttpVersionNotSupported, GenericClientError, GenericServerError);
 
-    public static final Map<DataType, JavaDataType> JAVA_DATA_TYPES_MAPPER = Map.of(
-            DataType.INTEGER, JavaDataType.INTEGER,
-            DataType.LONG, JavaDataType.LONG,
-            DataType.FLOAT, JavaDataType.FLOAT,
-            DataType.DOUBLE, JavaDataType.DOUBLE,
-            DataType.STRING, JavaDataType.STRING,
-            DataType.DATE, JavaDataType.DATE,
-            DataType.DATETIME, JavaDataType.DATETIME,
-            DataType.BOOLEAN, JavaDataType.BOOLEAN,
-            DataType.BIG_DECIMAL, JavaDataType.BIG_DECIMAL
+    public static final Map<DataType, JavaDataType> JAVA_DATA_TYPES_MAPPER = Map.ofEntries(
+            entry(DataType.INTEGER, JavaDataType.INTEGER),
+            entry(DataType.LONG, JavaDataType.LONG),
+            entry(DataType.FLOAT, JavaDataType.FLOAT),
+            entry(DataType.DOUBLE, JavaDataType.DOUBLE),
+            entry(DataType.STRING, JavaDataType.STRING),
+            entry(DataType.DATE, JavaDataType.DATE),
+            entry(DataType.DATETIME, JavaDataType.DATETIME),
+            entry(DataType.BOOLEAN, JavaDataType.BOOLEAN),
+            entry(DataType.BIG_DECIMAL, JavaDataType.BIG_DECIMAL),
+            entry(DataType.ENUM, JavaDataType.ENUM),
+            entry(DataType.OBJECT, JavaDataType.OBJECT)
     );
 }

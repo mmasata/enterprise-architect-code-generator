@@ -9,8 +9,6 @@ import java.util.Set;
 public final class GeneratorConfiguration {
 
     private String eaStartPackage;
-    private String company;
-    private String project;
     private String version;
 
     private MappingConfiguration mappingConfiguration;
