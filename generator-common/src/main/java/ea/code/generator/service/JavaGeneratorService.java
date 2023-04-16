@@ -35,9 +35,14 @@ public class JavaGeneratorService {
                 ? JAVA_RECORDS_FREEMARKER_TEMPLATE_FILE
                 : JAVA_LOMBOK_DTO_FREEMARKER_TEMPLATE_FILE;
 
+        if ("RECORDS".equalsIgnoreCase((String) params.get("javaDtoType")) && Integer.valueOf((String) params.get("javaVersion")) < 14) {
+            log.warn("[java-spring] - Records are available from Java 14. Current Java version not support Record yes. Generator will create Lombok models.");
+            DTOFreemarkerTemplate = JAVA_LOMBOK_DTO_FREEMARKER_TEMPLATE_FILE;
+        }
+
+        var finalDTOFreemarkerTemplate = DTOFreemarkerTemplate;
         javaRestControllerMapper.apply(generatorContext)
                 .forEach(restController -> javaHelper.createJavaFile(JAVA_REST_CONTROLLER_FREEMARKER_TEMPLATE_FILE, restController));
-
         javaDTOMapper.apply(generatorContext)
                 .forEach(javaDTO -> {
 
@@ -45,7 +50,7 @@ public class JavaGeneratorService {
                             && javaDTO.getFreemarkerVariables().get("isEnum").equals(Boolean.TRUE)) {
                         javaHelper.createJavaFile(JAVA_ENUM_FREEMARKER_TEMPLATE_FILE, javaDTO);
                     } else {
-                        javaHelper.createJavaFile(DTOFreemarkerTemplate, javaDTO);
+                        javaHelper.createJavaFile(finalDTOFreemarkerTemplate, javaDTO);
                     }
                 });
 

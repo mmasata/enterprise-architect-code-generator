@@ -49,27 +49,19 @@ public class JavaRestControllerMapper implements Function<GeneratorContext, List
     @Override
     public List<JavaFileDTO> apply(GeneratorContext generatorContext) {
 
-        var controllers = new ArrayList<JavaFileDTO>();
-        var controllerTypes = (List<String>) generatorContext.getConfiguration().getParameters().get("javaControllerTypes");
-
-        controllerTypes.forEach(controllerMode -> {
-            var typeOfControllers = generatorContext.getApiResources().stream()
-                    .map(apiResource -> mapToRestController(controllerMode, apiResource))
-                    .toList();
-
-            controllers.addAll(typeOfControllers);
-        });
-
-        return controllers;
+        var controllerType = (String) generatorContext.getConfiguration().getParameters().get("javaControllerType");
+        return generatorContext.getApiResources().stream()
+                .map(apiResource -> mapToRestController(controllerType, apiResource))
+                .toList();
     }
 
-    private JavaFileDTO mapToRestController(String controllerMode,
+    private JavaFileDTO mapToRestController(String controllerType,
                                             ApiResource apiResource) {
 
         var imports = new TreeSet<String>();
-        var isReactive = CONTROLLER_MODE_REACTIVE.equalsIgnoreCase(controllerMode);
+        var isReactive = CONTROLLER_MODE_REACTIVE.equalsIgnoreCase(controllerType);
         var endpoints = apiResource.getEndpoints().stream()
-                .map(apiEndpoint -> mapToRestEndpoint(apiEndpoint, imports, controllerMode))
+                .map(apiEndpoint -> mapToRestEndpoint(apiEndpoint, imports, controllerType))
                 .toList();
 
         var name = isReactive
@@ -148,6 +140,7 @@ public class JavaRestControllerMapper implements Function<GeneratorContext, List
             imports.add(javaHelper.getModelPackage() + "." + objectName);
         }
 
+        //TODO nejak zobecnit
         //queryParams
         apiEndpoint.getQueryParams().forEach(queryParam -> {
             var dataType = JAVA_DATA_TYPES_MAPPER.get(queryParam.getDataType());

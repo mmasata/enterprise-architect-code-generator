@@ -25,8 +25,8 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <version>3.0.4</version>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+            <version>3.0.5</version>
         </dependency>
 
         <dependency>
