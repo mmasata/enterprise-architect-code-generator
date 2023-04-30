@@ -32,7 +32,7 @@ public class CommonApiValidator {
         validateApiEndpoints(apiEndpoints);
 
         if (fatalError) {
-            throw new GeneratorException();
+            throw new GeneratorException("Generator validation fatal error!");
         }
     }
 

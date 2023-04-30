@@ -1,7 +1,7 @@
 package ea.code.generator.service;
 
+import ea.code.generator.GeneratorRunner;
 import ea.code.generator.annotations.GenerateCode;
-import ea.code.generator.annotations.RunGenerator;
 import ea.code.generator.context.GeneratorContext;
 import ea.code.generator.processor.FileProcessor;
 import ea.code.generator.service.mapper.AvroSchemaMapper;
@@ -15,7 +15,7 @@ import static ea.code.generator.service.constants.AvroSchemaConstants.AVRO_FREEM
 @Slf4j
 @GenerateCode(name = "avro-schema")
 @RequiredArgsConstructor
-public class AvroSchemaGeneratorService {
+public class AvroSchemaGeneratorService implements GeneratorRunner {
 
     private final GeneratorContext generatorContext;
 
@@ -23,7 +23,7 @@ public class AvroSchemaGeneratorService {
 
     private final FileProcessor fileProcessor;
 
-    @RunGenerator
+    @Override
     public void run() {
 
         var avroSchemas = avroSchemaMapper.apply(generatorContext);

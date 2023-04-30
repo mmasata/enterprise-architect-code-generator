@@ -1,7 +1,7 @@
 package ea.code.generator.service;
 
+import ea.code.generator.GeneratorRunner;
 import ea.code.generator.annotations.GenerateCode;
-import ea.code.generator.annotations.RunGenerator;
 import ea.code.generator.context.GeneratorContext;
 import ea.code.generator.processor.FileProcessor;
 import ea.code.generator.service.mapper.SwaggerMapper;
@@ -13,7 +13,7 @@ import static ea.code.generator.service.constants.SwaggerConstants.SWAGGER_FREEM
 
 @GenerateCode(name = "swagger")
 @RequiredArgsConstructor
-public class SwaggerGeneratorService {
+public class SwaggerGeneratorService implements GeneratorRunner {
 
     private final GeneratorContext generatorContext;
 
@@ -21,7 +21,7 @@ public class SwaggerGeneratorService {
 
     private final FileProcessor fileProcessor;
 
-    @RunGenerator
+    @Override
     public void run() {
 
         var swaggerVariables = swaggerMapper.apply(generatorContext);

@@ -1,16 +1,15 @@
 package ea.code.generator.processor;
 
+import ea.code.generator.GeneratorRunner;
 import ea.code.generator.annotations.GenerateCode;
-import ea.code.generator.annotations.RunGenerator;
 import ea.code.generator.context.GeneratorContext;
+import ea.code.generator.validator.exception.GeneratorException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
+import org.springframework.util.CollectionUtils;
 
 @Slf4j
 @Component
@@ -31,7 +30,7 @@ public class FrameworkProcessor {
 
         if (enabledCodeGenerators == null) {
             log.error("Parameter enabledGenerators is missing in config file!");
-            System.exit(0);
+            throw new GeneratorException("No enabled generators!");
         }
 
         var codeGenBeans = springContext.getBeansWithAnnotation(GenerateCode.class);
@@ -40,22 +39,25 @@ public class FrameworkProcessor {
                 .filter(bean -> enabledCodeGenerators.contains(bean.getClass().getAnnotation(GenerateCode.class).name()))
                 .toList();
 
-        relevantBeans.forEach(bean -> Arrays.stream(bean.getClass().getDeclaredMethods())
-                .filter(method -> method.isAnnotationPresent(RunGenerator.class))
-                .forEach(method -> {
-                    try {
-                        log.info("Running {}.{}() code generator.", bean.getClass().getName(), method.getName());
+        if (CollectionUtils.isEmpty(relevantBeans)) {
+            log.error("No relevant generators was found!");
+            throw new GeneratorException("No enabled generators!");
+        }
 
-                        var startTime = System.currentTimeMillis();
-                        method.invoke(bean);
-                        var endTime = System.currentTimeMillis();
-                        var timeElapsed = endTime - startTime;
+        relevantBeans.forEach(relevantBean -> {
+            if (relevantBean instanceof GeneratorRunner) {
 
-                        log.info("[{}] Took {}ms.", bean.getClass().getName(), timeElapsed);
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        throw new RuntimeException(e);
-                    }
-                }));
+                log.info("Running generator {}", relevantBean.getClass().getName());
+                var startTime = System.currentTimeMillis();
+                ((GeneratorRunner) relevantBean).run();
+
+                var endTime = System.currentTimeMillis();
+                var timeElapsed = endTime - startTime;
+                log.info("[{}] Took {}ms.", relevantBean.getClass().getName(), timeElapsed);
+            } else {
+                throw new GeneratorException("Runner isn't implementations of GeneratorRunner class");
+            }
+        });
     }
 
 }

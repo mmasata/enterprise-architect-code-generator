@@ -1,17 +1,15 @@
 package ea.code.generator.processor;
 
+import ea.code.generator.GeneratorMapper;
 import ea.code.generator.annotations.CustomGeneratorMapper;
-import ea.code.generator.annotations.RunMapper;
 import ea.code.generator.context.GeneratorContext;
 import ea.code.generator.validator.CommonApiValidator;
+import ea.code.generator.validator.exception.GeneratorException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 
 
 @Slf4j
@@ -51,31 +49,35 @@ public class EaProcessor {
 
         if (mapperBean == null) {
             log.error("Custom mapper profile {} don't exist!", profile);
-            System.exit(0);
+            throw new GeneratorException("Mapper doesn't exist!");
         }
 
-        Arrays.stream(mapperBean.getClass().getDeclaredMethods())
-                .filter(method -> method.isAnnotationPresent(RunMapper.class))
-                .forEach(method -> {
+        if (mapperBean instanceof GeneratorMapper) {
 
-                    try {
-                        log.info("Running {}.{}() mapper.", mapperBean.getClass().getName(), method.getName());
+            log.info("running {} mapper", mapperBean.getClass().getName());
+            var startTime = System.currentTimeMillis();
+            var dtoObjects = ((GeneratorMapper) mapperBean).mapDtoObjects();
+            var apiResources = ((GeneratorMapper) mapperBean).mapApiResources();
 
-                        var startTime = System.currentTimeMillis();
-                        method.invoke(mapperBean);
-                        var endTime = System.currentTimeMillis();
-                        var timeElapsed = endTime - startTime;
+            if (dtoObjects != null) {
+                generatorContext.setDtoObjects(dtoObjects);
+            }
 
-                        log.info("[{}] Took {}ms.", mapperBean.getClass().getName(), timeElapsed);
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        log.error("Cannot invoke {}.{}", mapperBean.getClass().getName(), method.getName());
-                        throw new RuntimeException(e);
-                    }
-                });
+            if (apiResources != null) {
+                generatorContext.setApiResources(apiResources);
+            }
+
+            var endTime = System.currentTimeMillis();
+            var timeElapsed = endTime - startTime;
+            log.info("[{}] Took {}ms.", mapperBean.getClass().getName(), timeElapsed);
+        } else {
+            throw new GeneratorException("Mapper isn't implementations of GeneratorMapper class");
+        }
     }
 
     private void invokeGenericMapper() {
-        //TODO
+        //NOT IMPLEMENTED - will be extended in the future
+        throw new GeneratorException("Generic mapper is not implemented yet!");
     }
 
 }

@@ -1,7 +1,7 @@
 package ea.code.generator.service;
 
+import ea.code.generator.GeneratorRunner;
 import ea.code.generator.annotations.GenerateCode;
-import ea.code.generator.annotations.RunGenerator;
 import ea.code.generator.context.GeneratorContext;
 import ea.code.generator.service.helper.JavaHelper;
 import ea.code.generator.service.mapper.JavaDTOMapper;
@@ -9,15 +9,12 @@ import ea.code.generator.service.mapper.JavaRestControllerMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import static ea.code.generator.service.constants.JavaConstants.JAVA_ENUM_FREEMARKER_TEMPLATE_FILE;
-import static ea.code.generator.service.constants.JavaConstants.JAVA_LOMBOK_DTO_FREEMARKER_TEMPLATE_FILE;
-import static ea.code.generator.service.constants.JavaConstants.JAVA_RECORDS_FREEMARKER_TEMPLATE_FILE;
-import static ea.code.generator.service.constants.JavaConstants.JAVA_REST_CONTROLLER_FREEMARKER_TEMPLATE_FILE;
+import static ea.code.generator.service.constants.JavaConstants.*;
 
 @Slf4j
 @GenerateCode(name = "java-spring")
 @RequiredArgsConstructor
-public class JavaGeneratorService {
+public class JavaGeneratorService implements GeneratorRunner {
 
     private final GeneratorContext generatorContext;
 
@@ -27,7 +24,7 @@ public class JavaGeneratorService {
 
     private final JavaHelper javaHelper;
 
-    @RunGenerator
+    @Override
     public void run() {
 
         var params = generatorContext.getConfiguration().getParameters();

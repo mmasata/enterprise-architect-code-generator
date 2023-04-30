@@ -1,9 +1,8 @@
 package ea.code.generator.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ea.code.generator.context.model.GeneratorConfiguration;
 import ea.code.generator.context.GeneratorContext;
-import lombok.SneakyThrows;
+import ea.code.generator.context.model.GeneratorConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -15,12 +14,12 @@ import org.springframework.context.annotation.DependsOn;
 import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
 @Configuration
 @Slf4j
 public class GeneratorBeanConfig {
 
-    @SneakyThrows
     @Bean
     @DependsOn("registerGeneratorContext")
     public DataSource dataSource(@Autowired GeneratorContext generatorContext) {
@@ -32,7 +31,12 @@ public class GeneratorBeanConfig {
                 .password(databaseConnection.getPassword())
                 .build();
 
-        log.info("Database connection valid = {}", datasource.getConnection().isValid(1000));
+        try {
+            log.info("Database connection valid = {}", datasource.getConnection().isValid(1000));
+        } catch (SQLException e) {
+            log.error("Invalid database connection", e);
+            throw new RuntimeException(e);
+        }
         return datasource;
     }
 
