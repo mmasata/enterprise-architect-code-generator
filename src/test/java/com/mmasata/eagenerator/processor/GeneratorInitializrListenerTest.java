@@ -5,12 +5,14 @@ import com.mmasata.eagenerator.annotations.Generator;
 import com.mmasata.eagenerator.context.GeneratorContext;
 import com.mmasata.eagenerator.context.model.GeneratorConfiguration;
 import com.mmasata.eagenerator.exception.GeneratorException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.ApplicationContext;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import java.util.Collections;
 import java.util.Map;
@@ -30,22 +32,30 @@ class GeneratorInitializrListenerTest {
     private GeneratorContext generatorContext;
 
     @Mock
-    private ApplicationContext applicationContext;
+    private ConfigurableApplicationContext applicationContext;
 
     @Mock
     private MapperProcessor mapperProcessor;
 
+    @Mock
+    private ApplicationReadyEvent applicationReadyEvent;
+
     @InjectMocks
     private GeneratorInitializrListener generatorInitializrListener;
+
+    @BeforeEach
+    void setup() {
+        when(applicationReadyEvent.getApplicationContext()).thenReturn(applicationContext);
+    }
 
     @Test
     void runTest_noEnabledGeneratorsError() {
         when(generatorContext.getConfiguration()).thenReturn(mockGeneratorConfiguration(null));
-        assertThrows(GeneratorException.class, () -> generatorInitializrListener.onApplicationEvent(null));
+        assertThrows(GeneratorException.class, () -> generatorInitializrListener.onApplicationEvent(applicationReadyEvent));
 
         when(generatorContext.getConfiguration()).thenReturn(mockGeneratorConfiguration(Set.of("someText")));
         when(applicationContext.getBeansWithAnnotation(Generator.class)).thenReturn(Collections.emptyMap());
-        assertThrows(GeneratorException.class, () -> generatorInitializrListener.onApplicationEvent(null));
+        assertThrows(GeneratorException.class, () -> generatorInitializrListener.onApplicationEvent(applicationReadyEvent));
 
         verify(mapperProcessor, times(2)).run();
         verify(generatorContext, times(2)).getConfiguration();
@@ -55,7 +65,7 @@ class GeneratorInitializrListenerTest {
     void runTest_generatorNotInstanceOfGeneratorRunnerError() {
         when(generatorContext.getConfiguration()).thenReturn(mockGeneratorConfiguration(Set.of(PROFILE_NAME)));
         when(applicationContext.getBeansWithAnnotation(Generator.class)).thenReturn(Map.of(PROFILE_NAME, new GeneratorWithoutImplementation()));
-        assertThrows(GeneratorException.class, () -> generatorInitializrListener.onApplicationEvent(null));
+        assertThrows(GeneratorException.class, () -> generatorInitializrListener.onApplicationEvent(applicationReadyEvent));
 
         verify(mapperProcessor).run();
         verify(generatorContext).getConfiguration();
@@ -65,7 +75,7 @@ class GeneratorInitializrListenerTest {
     void runTest_shouldPass() {
         when(generatorContext.getConfiguration()).thenReturn(mockGeneratorConfiguration(Set.of(PROFILE_NAME)));
         when(applicationContext.getBeansWithAnnotation(Generator.class)).thenReturn(Map.of(PROFILE_NAME, new GeneratorWithImplementation()));
-        assertDoesNotThrow(() -> generatorInitializrListener.onApplicationEvent(null));
+        assertDoesNotThrow(() -> generatorInitializrListener.onApplicationEvent(applicationReadyEvent));
 
         verify(mapperProcessor).run();
         verify(generatorContext).getConfiguration();
