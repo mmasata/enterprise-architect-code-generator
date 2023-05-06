@@ -5,6 +5,9 @@ import lombok.Data;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * A context model of the framework generator storing input parameters.
+ */
 @Data
 public final class GeneratorConfiguration {
 

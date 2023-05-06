@@ -8,6 +8,11 @@ import lombok.Data;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Defines the data important for the generator, defining its behavior - the context of the generator framework.
+ * <p>
+ * It stores the configuration from the input, and common-api.
+ */
 @Data
 public class GeneratorContext {
 

@@ -3,6 +3,9 @@ package com.mmasata.eagenerator.context.model.enums;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * Enum of possible mapping strategies.
+ */
 public enum MappingType {
 
     GENERIC,
