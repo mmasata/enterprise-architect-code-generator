@@ -6,6 +6,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
 
+/**
+ * JPA entity defining methods/functions of classes and their information such as name, return type, input parameters, etc in EA model.
+ */
 @Getter
 @Entity
 @Table(name = "t_operation")

@@ -7,6 +7,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 
+/**
+ * JPA entity defining a class attribute in the EA model.
+ */
 @Getter
 @Entity
 @Table(name = "t_attribute")

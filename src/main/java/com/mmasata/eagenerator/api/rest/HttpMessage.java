@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Common-api model defining HTTP message.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

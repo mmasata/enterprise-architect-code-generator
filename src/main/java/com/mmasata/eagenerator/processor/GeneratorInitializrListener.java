@@ -10,6 +10,9 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.util.CollectionUtils;
 
+/**
+ * A listener that, after initializing the Bean and SpringContext, traverses the application context to find the generator components and execute the logic.
+ */
 @Slf4j
 public class GeneratorInitializrListener implements ApplicationListener<ApplicationReadyEvent> {
 
@@ -19,6 +22,10 @@ public class GeneratorInitializrListener implements ApplicationListener<Applicat
     @Autowired
     private MapperProcessor mapperProcessor;
 
+    /**
+     * The method executes the framework generator logic.
+     * @param event Event published as late as conceivably possible to indicate that the application is ready to service requests.
+     */
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         log.trace("GeneratorProcess has been invoked");

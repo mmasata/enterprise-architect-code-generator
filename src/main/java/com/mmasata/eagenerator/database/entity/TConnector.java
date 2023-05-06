@@ -11,6 +11,9 @@ import lombok.Getter;
 
 import java.io.Serializable;
 
+/**
+ * JPA entity defining the relationship (including the relationship type) between two classes in the EA model.
+ */
 @Getter
 @Entity
 @Table(name = "t_connector")

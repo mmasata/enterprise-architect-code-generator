@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Map;
 
+/**
+ * Class for working with outputs. Processes freemarker templates and fills files with data.
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class FileProcessor {
@@ -21,6 +24,13 @@ public class FileProcessor {
 
     private final Configuration freemarkerConfig;
 
+    /**
+     * The class processes the freemarker template with the data for it and writes the output to the StringWriter.
+     *
+     * @param templateName Name of the freemarker template.
+     * @param variables    Variable map for freemarker template.
+     * @return Returns the processed template in StringWriter.
+     */
     public StringWriter processFreemarkerTemplate(String templateName,
                                                   Map<String, Object> variables) {
 
@@ -38,6 +48,10 @@ public class FileProcessor {
         return stringWriter;
     }
 
+    /**
+     * Generates files from the data.
+     * @param data A map where the key prescribes the name of the output file and the value of the data to be written to it.
+     */
     public void generate(Map<String, StringWriter> data) {
 
         data.forEach((fileName, fileData) -> {

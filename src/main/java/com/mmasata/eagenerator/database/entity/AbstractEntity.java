@@ -5,6 +5,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 
+/**
+ * Abstract JPA entity.
+ */
 @Getter
 @MappedSuperclass
 public abstract class AbstractEntity {

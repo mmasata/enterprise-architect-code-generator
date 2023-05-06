@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
  *    }
  * </pre>
  *
- * <strong>Multiple generator profiles can be enabled at once, just add to the input field.<strong>
+ * <strong>Multiple generator profiles can be enabled at once, just add to the input field.</strong>
  */
 @Documented
 @Target(ElementType.TYPE)

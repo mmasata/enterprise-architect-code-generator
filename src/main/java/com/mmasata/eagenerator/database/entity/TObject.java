@@ -11,6 +11,9 @@ import lombok.Getter;
 
 import java.util.List;
 
+/**
+ * JPA entity defining the basic building blocks in EA model. These include class, folder, data type and others.
+ */
 @Getter
 @Entity
 @Table(name = "t_object")

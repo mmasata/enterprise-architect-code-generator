@@ -18,6 +18,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
 
+/**
+ * Autoconfiguration of generator profiles and their supporting components.
+ */
 @Slf4j
 @AutoConfiguration
 @AutoConfigureAfter(value = {GeneratorProcessorAutoConfiguration.class})

@@ -22,6 +22,9 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * Autoconfiguration forming Beans for output generating processing.
+ */
 @Slf4j
 @AutoConfiguration
 @AutoConfigureAfter(value = {FreeMarkerAutoConfiguration.class})

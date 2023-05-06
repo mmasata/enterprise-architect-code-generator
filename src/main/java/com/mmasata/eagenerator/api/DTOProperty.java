@@ -8,6 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Common-api model defining an object or parameter.
+ * <p>
+ * It stores the data type, name, its parameters.
+ */
 @Data
 public class DTOProperty {
 

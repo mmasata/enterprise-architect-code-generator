@@ -6,6 +6,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
 
+/**
+ * JPA entity defining the T_Object property in EA model.
+ */
 @Getter
 @Entity
 @Table(name = "t_objectproperties")

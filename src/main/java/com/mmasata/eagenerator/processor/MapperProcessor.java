@@ -10,6 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 
 
+/**
+ * A processor that executes the mapping logic and passes the common-api context to the framework generator.
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class MapperProcessor {
@@ -20,6 +23,9 @@ public class MapperProcessor {
 
     private final CommonApiValidator commonApiValidator;
 
+    /**
+     * The method starts the mapper processor.
+     */
     public void run() {
 
         log.trace("Running EAProcessor.");

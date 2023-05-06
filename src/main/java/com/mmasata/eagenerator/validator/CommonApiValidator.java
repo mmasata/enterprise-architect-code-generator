@@ -5,18 +5,24 @@ import com.mmasata.eagenerator.api.rest.ApiResource;
 import com.mmasata.eagenerator.context.GeneratorContext;
 import com.mmasata.eagenerator.exception.GeneratorException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Validation component for finding badly mapped attributes in common-api.
+ */
 @Slf4j
 public class CommonApiValidator {
 
     private boolean fatalError = false;
 
+    /**
+     * The method starts the validation component.
+     * @param generatorContext Framework generator context (contains common-api).
+     */
     public void validate(GeneratorContext generatorContext) {
 
         var apiResources = generatorContext.getApiResources();

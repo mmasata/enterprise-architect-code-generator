@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * Common-api model defining an API resource.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Common-api model defining API endpoint.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

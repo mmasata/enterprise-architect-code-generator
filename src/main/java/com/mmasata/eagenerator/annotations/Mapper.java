@@ -33,7 +33,7 @@ import java.lang.annotation.Target;
  *    }
  * </pre>
  *
- * <strong>Only one selected mapping profile is launched at a time!<strong>
+ * <strong>Only one selected mapping profile is launched at a time!</strong>
  */
 @Documented
 @Target(ElementType.TYPE)
