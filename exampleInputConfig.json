@@ -20,10 +20,7 @@
     "javaDistributionManagementRepoId": "repo-name",
     "javaDistributionManagementRepoUrl": "https://www.example.com/repo",
     "javaDtoType": "RECORDS",
-    "javaControllerTypes": [
-      "REACTIVE",
-      "STANDARD"
-    ],
+    "javaControllerType": "REACTIVE",
     "javaVersion": "17",
     "javaGroupId": "cz.com.example",
     "javaProjectName": "example-app-interfaces",

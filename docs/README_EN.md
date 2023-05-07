@@ -20,10 +20,53 @@ sequenceDiagram
 
 <strong>The user must always write their own mapper!</strong>
 
+## Steps to launch the application
+* User has added a dependency to pom.xml for this starter
+* User has implemented the mapper
+* User prepared a .json configuration file
+* User started the application with an argument with a path to the .json configuration file
+
 ## Application requirements
 * Java version 17 or higher
 * SpringBoot version 3 or higher
 * Maven
+
+## Config file
+The configuration file is in JSON format and looks like this:
+```json
+{
+  "databaseConnection": {
+    "url" : "DB_URL",
+    "user": "DB_USER",
+    "password": "DB_PASSWORD"
+  },
+  "mappingConfiguration": {
+    "type": "custom",
+    "profile": "test-mapper"
+  },
+  "eaStartPackage": "Api.TestPath",
+  "version": "1.0.0",
+  "enabledGenerators": [
+    "generator-a",
+    "generator-b",
+    "generator-c"
+  ],
+  "parameters": {
+  }
+}
+```
+
+| Attribute | Description | Obligation |
+|-----------------------------|:-----------------------------------------------------------------:|----------:|
+| databaseConnection.url | JDBC to EA database | &check; |
+| databaseConnection.user | username for DB connection | &check; |
+| databaseConnection.password | password for DB connection | &check; |
+| mappingConfiguration.type | mapping type (at the moment always = "custom" | &check; |
+| mappingConfiguration.profile | mapper name (corresponds to the name in the @Mapper annotation) | &check; |
+| eaStartPackage | Location of the diagram in EA | &check; |
+| version | Version of output files | &check; |
+| enabledGenerators | List of enabled generators (corresponds to the name in the @Generator annotation) | &check; |
+| parameters | Additional parameters for individual generators | &cross; |
 
 ## Components
 

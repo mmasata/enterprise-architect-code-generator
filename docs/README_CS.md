@@ -20,14 +20,57 @@ sequenceDiagram
     C->>D: generate()
     C->>E: generate()
 ```
-
 <strong>Uživatel si vždy musí napsat svůj vlastní mapper!</strong>
+
+## Kroky ke spuštění aplikace
+* Uživatel si přidal do pom.xml dependency na tento starter
+* Uživatel si naimplementoval mapper
+* Uživatel si připravil konfigurační .json soubor
+* Uživatel spustil aplikaci s argumentem s cestou na konfigurační .json soubor
 
 ## Požadavky na použití
 
 * Java verze 17 nebo vyšší
 * SpringBoot verze 3 nebo vyšší
 * Maven
+
+## Konfigurační soubor
+Konfigurační soubor je ve formátu JSON a vypadá následovně:
+```json
+{
+  "databaseConnection": {
+    "url" : "DB_URL",
+    "user": "DB_USER",
+    "password": "DB_PASSWORD"
+  },
+  "mappingConfiguration": {
+    "type": "custom",
+    "profile": "test-mapper"
+  },
+  "eaStartPackage": "Api.TestPath",
+  "version": "1.0.0",
+  "enabledGenerators": [
+    "generator-a",
+    "generator-b",
+    "generator-c"
+  ],
+  "parameters": {
+  }
+}
+```
+| Atribut                     |                               Popis                               | Povinnost |
+|-----------------------------|:-----------------------------------------------------------------:|----------:|
+| databaseConnection.url      |                        JDBC k EA databázi                         |   &check; |
+| databaseConnection.user     |                    username pro připojení k DB                    |   &check; |
+| databaseConnection.password |                     heslo pro připojení k DB                      |   &check; |
+| mappingConfiguration.type       |            typ mapování (v tuto chvíli vždy = "custom"            |   &check; |
+| mappingConfiguration.profile       |         název mapperu (odpovídá názvu v anotaci @Mapper)          |   &check; |
+| eaStartPackage       |                      Umístění diagramu v EA                       |   &check; |
+| version       |                     Verze výstupních souborů                      |   &check; |
+| enabledGenerators       | Seznam zapnutých generátorů (odpovídá názvu v anotaci @Generator) |   &check; |
+| parameters       |           Dodatečné parametry pro jednotlivé generátory           |   &cross; |
+Parameters se vztahují k jednotlivým generátorům a jejich povinnost závisí dle zapnutého seznamu generátorů.
+
 
 ## Komponenty
 
