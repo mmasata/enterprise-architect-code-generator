@@ -1,5 +1,19 @@
 # Česká verze dokumentace
 
+# Obsah
+* [Základní informace](#základní-informace)
+* [Kroky ke spuštění aplikace](#kroky-ke-spuštění-aplikace)
+* [Požadavky na použití](#požadavky-na-použití)
+* [Konfigurační soubor](#konfigurační-soubor)
+* [Komponenty](#komponenty)
+  * [Common-api](#common-api)
+  * [Mapper](#mapper)
+  * [Generátory](#generátory)
+* [Existující generátory](#existující-generátory)
+  * [Java SpringBoot](#java-springBoot)
+  * [Swagger](#swagger)
+  * [AvroSchema](#avroSchema)
+
 ## Základní informace
 
 Tato aplikace slouží k generování kódu z Enterprise Architect modelů. Je plně konfigurovatelné, lze si dopsat vlastní
@@ -69,6 +83,7 @@ Konfigurační soubor je ve formátu JSON a vypadá následovně:
 | version       |                     Verze výstupních souborů                      |   &check; |
 | enabledGenerators       | Seznam zapnutých generátorů (odpovídá názvu v anotaci @Generator) |   &check; |
 | parameters       |           Dodatečné parametry pro jednotlivé generátory           |   &cross; |
+
 Parameters se vztahují k jednotlivým generátorům a jejich povinnost závisí dle zapnutého seznamu generátorů.
 
 
@@ -249,3 +264,30 @@ public class MyGenerator implements GeneratorHandler {
 
 }
 ```
+
+## Existující generátory
+Framework v sobě obsahuje několik zabudovaných generátorů, které lze spustit.
+
+### Java SpringBoot
+| Název                                        |                     Popis                     |
+|----------------------------------------------|:---------------------------------------------:|
+| <strong>java-spring</strong>                 |               Název generátoru                |
+| parameters.javaDistributionManagementRepoId  |          ID distribučního repositáře          |
+| parameters.javaDistributionManagementRepoUrl |      URL adresa distribučního repositáře      |
+| parameters.javaDtoType                       |    typ modelů (třídy s LOMBOK či RECORDS)     |
+| parameters.javaControllerType                | typ Rest controllerů (REACTIVE nebo STANDARD) |
+| parameters.javaVersion                       |                  verze javy                   |
+| parameters.javaGroupId                       |        groupId vygenerovaného projektu        |
+| parameters.javaProjectName                   |         název vygenerovaného projektu         |
+| parameters.javaPackage                       |   root package vygenerovaných java souborů    |
+
+### Swagger
+| Název                                       |                  Popis                  |
+|---------------------------------------------|:---------------------------------------:|
+| <strong>swagger</strong>                    |            Název generátoru             |
+| parameters.swaggerTitle | Název vygenerovaného swaggeru dokumentu |
+
+### AvroSchema
+| Název                                       |                  Popis                  |
+|---------------------------------------------|:---------------------------------------:|
+| <strong>avro-schema</strong>                    |            Název generátoru             |

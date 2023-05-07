@@ -1,5 +1,19 @@
 # English version of documentation
 
+# Table of Contects
+* [Basic information](#basic-information)
+* [Steps to launch the application](#steps-to-launch-the-application)
+* [Application requirements](#application-requirements)
+* [Config file](#config-file)
+* [Components](#components)
+    * [Common-api](#common-api)
+    * [Mapper](#mapper)
+    * [Generators](#generators)
+* [Embedded generators](#embedded-generators)
+    * [Java SpringBoot](#java-springBoot)
+    * [Swagger](#swagger)
+    * [AvroSchema](#avroSchema)
+
 ## Basic information
 This application is used to generate code from Enterprise Architect models. It is fully configurable, you can write your own mappers and custom generation profiles.
 The application already includes generators for Java (SpringBoot), Swagger and Avro schema. It is designed as a SpringBoot starter application.
@@ -67,6 +81,8 @@ The configuration file is in JSON format and looks like this:
 | version | Version of output files | &check; |
 | enabledGenerators | List of enabled generators (corresponds to the name in the @Generator annotation) | &check; |
 | parameters | Additional parameters for individual generators | &cross; |
+
+Parameters refer to individual generators and their obligation depends on the enabled generator list.
 
 ## Components
 
@@ -232,3 +248,30 @@ public class MyGenerator implements GeneratorHandler {
 
 }
 ```
+
+## Embedded generators
+The framework contains several built-in generators that can be run.
+
+### Java SpringBoot
+| Name                                         |                   Description                   |
+|----------------------------------------------|:-----------------------------------------------:|
+| <strong>java-spring</strong>                 |                Name of generator                |
+| parameters.javaDistributionManagementRepoId  |          ID of distribution repository          |
+| parameters.javaDistributionManagementRepoUrl |     URL address of distribution repository      |
+| parameters.javaDtoType                       |    model type (class with LOMBOK or RECORDS)    |
+| parameters.javaControllerType                | type of Rest Controllers (REACTIVE or STANDARD) |
+| parameters.javaVersion                       |                  Java version                   |
+| parameters.javaGroupId                       |          groupId of generated project           |
+| parameters.javaProjectName                   |            name of generated project            |
+| parameters.javaPackage                       |      root package of generated java files       |
+
+### Swagger
+| Name                                       |            Description             |
+|---------------------------------------------|:----------------------------------:|
+| <strong>swagger</strong>                    |         Name of generator          |
+| parameters.swaggerTitle | Name of generated swagger document |
+
+### AvroSchema
+| Name                                       |    Description    |
+|---------------------------------------------|:-----------------:|
+| <strong>avro-schema</strong>                    | Name of generator |
