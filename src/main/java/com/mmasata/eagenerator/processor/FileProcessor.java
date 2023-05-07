@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Map;
 
 /**
@@ -50,33 +51,41 @@ public class FileProcessor {
 
     /**
      * Generates files from the data.
+     *
      * @param data A map where the key prescribes the name of the output file and the value of the data to be written to it.
      */
-    public void generate(Map<String, StringWriter> data) {
+    public void generate(Map<String, Writer> data) {
+        data.forEach(this::generate);
+    }
 
-        data.forEach((fileName, fileData) -> {
+    /**
+     * Generates file from the data.
+     *
+     * @param fileName Name of the file
+     * @param fileData Stream of data content
+     */
+    public void generate(String fileName,
+                         Writer fileData) {
 
-            fileName = EXPORT_FOLDER + FOLDER_SEPARATOR + fileName;
+        fileName = EXPORT_FOLDER + FOLDER_SEPARATOR + fileName;
 
-            try {
-                var file = new File(fileName);
-                var parent = file.getParentFile();
+        try {
+            var file = new File(fileName);
+            var parent = file.getParentFile();
 
-                if (parent != null && !parent.exists() && !parent.mkdirs()) {
-                    log.error("Couldn't create directory for {}", fileName);
-                    throw new IllegalStateException();
-                }
-
-                var fileWriter = new FileWriter(file);
-                fileWriter.write(fileData.toString());
-                fileWriter.close();
-                log.info("Data was written to file {}.", fileName);
-            } catch (IOException e) {
-                log.error("Generating file {} failed.", fileName);
-                throw new RuntimeException(e);
+            if (parent != null && !parent.exists() && !parent.mkdirs()) {
+                log.error("Couldn't create directory for {}", fileName);
+                throw new IllegalStateException();
             }
 
-        });
+            var fileWriter = new FileWriter(file);
+            fileWriter.write(fileData.toString());
+            fileWriter.close();
+            log.info("Data was written to file {}.", fileName);
+        } catch (IOException e) {
+            log.error("Generating file {} failed.", fileName);
+            throw new RuntimeException(e);
+        }
     }
 
     private Template getTemplate(String name) {
