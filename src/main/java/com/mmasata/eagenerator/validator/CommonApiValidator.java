@@ -4,6 +4,7 @@ import com.mmasata.eagenerator.api.rest.ApiEndpoint;
 import com.mmasata.eagenerator.api.rest.ApiResource;
 import com.mmasata.eagenerator.context.GeneratorContext;
 import com.mmasata.eagenerator.exception.GeneratorException;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
@@ -17,6 +18,7 @@ import java.util.Objects;
 @Slf4j
 public class CommonApiValidator {
 
+    @Getter
     private boolean fatalError = false;
 
     /**
@@ -33,8 +35,13 @@ public class CommonApiValidator {
                 .filter(Objects::nonNull)
                 .toList();
 
-        validateApiResources(apiResources);
-        validateApiEndpoints(apiEndpoints);
+        if(!CollectionUtils.isEmpty(apiResources)) {
+            validateApiResources(apiResources);
+        }
+
+        if(!CollectionUtils.isEmpty(apiEndpoints)) {
+            validateApiEndpoints(apiEndpoints);
+        }
 
         if (fatalError) {
             throw new GeneratorException("Generator validation fatal error!");
