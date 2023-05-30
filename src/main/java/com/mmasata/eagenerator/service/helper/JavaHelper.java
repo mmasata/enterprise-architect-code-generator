@@ -1,13 +1,14 @@
 package com.mmasata.eagenerator.service.helper;
 
 import com.mmasata.eagenerator.context.GeneratorContext;
+import com.mmasata.eagenerator.context.model.Pom;
 import com.mmasata.eagenerator.processor.FileProcessor;
 import com.mmasata.eagenerator.service.constants.JavaConstants;
+import com.mmasata.eagenerator.service.freemarker.model.PomRepository;
 import com.mmasata.eagenerator.service.model.JavaFileDTO;
-import com.mmasata.eagenerator.utils.ConfigUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,10 +28,10 @@ public class JavaHelper {
     }
 
     public String getModelPackage() {
-        var params = generatorContext.getConfiguration().getParameters();
+        var packageName = generatorContext.getConfiguration().getJavaSpring().getPackageName();
 
-        if (params.containsKey(JavaConstants.JAVA_PACKAGE_PARAM)) {
-            return params.get(JavaConstants.JAVA_PACKAGE_PARAM) + "." + JavaConstants.JAVA_MODEL_PACKAGE;
+        if (StringUtils.isNotEmpty(packageName)) {
+            return packageName + "." + JavaConstants.JAVA_MODEL_PACKAGE;
         }
 
         return JavaConstants.JAVA_MODEL_PACKAGE;
@@ -41,10 +42,10 @@ public class JavaHelper {
     }
 
     public String getRestPackage() {
-        var params = generatorContext.getConfiguration().getParameters();
+        var packageName = generatorContext.getConfiguration().getJavaSpring().getPackageName();
 
-        if (params.containsKey(JavaConstants.JAVA_PACKAGE_PARAM)) {
-            return params.get(JavaConstants.JAVA_PACKAGE_PARAM) + "." + JavaConstants.JAVA_REST_CONTROLLER_PACKAGE;
+        if (StringUtils.isNotEmpty(packageName)) {
+            return packageName + "." + JavaConstants.JAVA_REST_CONTROLLER_PACKAGE;
         }
 
         return JavaConstants.JAVA_REST_CONTROLLER_PACKAGE;
@@ -59,7 +60,7 @@ public class JavaHelper {
 
         var variables = javaFileDTO.getFreemarkerVariables();
         var data = fileProcessor.processFreemarkerTemplate(template, variables);
-        var projectBase = generatorContext.getConfiguration().getParameters().get(JavaConstants.JAVA_PROJECT_NAME);
+        var projectBase = generatorContext.getConfiguration().getJavaSpring().getPom().getName();
 
         var baseProjectPath = JavaConstants.JAVA_PROJECT_MAIN_PATTERN.formatted(projectBase);
         var javaFilePath = JavaConstants.JAVA_FILE_OUTPUT_PATTERN.formatted(baseProjectPath, javaFileDTO.getFolder(), javaFileDTO.getFileName());
@@ -67,39 +68,36 @@ public class JavaHelper {
         fileProcessor.generate(Map.of(javaFilePath, data));
     }
 
-    public void createPom() {
-
-        var config = generatorContext.getConfiguration();
-        var params = config.getParameters();
-
-        var javaProjectName = ConfigUtils.getConfigParameterOrNull(params, JavaConstants.JAVA_PROJECT_NAME);
-        var javaVersion = ConfigUtils.getConfigParameterOrNull(params, JavaConstants.JAVA_VERSION_PARAM);
-        var javaGroupId = ConfigUtils.getConfigParameterOrNull(params, "javaGroupId");
-        var version = config.getVersion();
-
-        if (ObjectUtils.anyNull(javaProjectName, javaGroupId, javaVersion, version)) {
-            log.error("[java-generator] - javaProjectName, javaGroupId, javaVersion, version and javaPackage are required fields! Some of them is missing");
-            return;
-        }
-
+    public void createPom(Pom pom, String appVersion) {
         Map<String, Object> pomVariables = new HashMap<>();
-        pomVariables.put("groupId", javaGroupId);
-        pomVariables.put("artifactId", javaProjectName);
-        pomVariables.put("version", version);
-        pomVariables.put("name", javaProjectName);
-        pomVariables.put("javaVersion", javaVersion);
-        pomVariables.put("repoId", ConfigUtils.getConfigParameterOrNull(params, "javaDistributionManagementRepoId"));
-        pomVariables.put("repoUrl", ConfigUtils.getConfigParameterOrNull(params, "javaDistributionManagementRepoUrl"));
+        pomVariables.put("groupId", pom.getGroupId());
+        pomVariables.put("artifactId", pom.getArtifactId());
+        pomVariables.put("version", appVersion);
+        pomVariables.put("name", pom.getName());
+        pomVariables.put("javaVersion", pom.getJavaVersion());
+
+        pomVariables.put("distributionManagement", pom.getDistributionManagement().stream().map(in -> new PomRepository(in.getType(),
+                in.getName(),
+                in.getId(),
+                in.getUrl())).toList());
+
+        pomVariables.put("repositories", pom.getRepositories().stream().map(in -> new PomRepository(in.getType(),
+                in.getName(),
+                in.getId(),
+                in.getUrl())).toList());
+
+        pomVariables.put("pluginRepositories", pom.getPluginRepositories().stream().map(in -> new PomRepository(in.getType(),
+                in.getName(),
+                in.getId(),
+                in.getUrl())).toList());
 
         var data = fileProcessor.processFreemarkerTemplate(JavaConstants.JAVA_POM_FREEMARKER_TEMPLATE_FILE, pomVariables);
-        fileProcessor.generate(Map.of(javaProjectName + "/pom.xml", data));
+        fileProcessor.generate(Map.of(pom.getName() + "/pom.xml", data));
     }
 
-    public void createPackageInfo() {
+    public void createPackageInfo(String projectName) {
 
-        var projectBase = generatorContext.getConfiguration().getParameters().get("javaProjectName");
-        var baseProjectPath = JavaConstants.JAVA_PROJECT_MAIN_PATTERN.formatted(projectBase);
-
+        var baseProjectPath = JavaConstants.JAVA_PROJECT_MAIN_PATTERN.formatted(projectName);
         var javaFilePath = JavaConstants.JAVA_FILE_OUTPUT_PATTERN.formatted(baseProjectPath, getModelFolder(), "package-info");
         var data = fileProcessor.processFreemarkerTemplate(JavaConstants.JAVA_PACKAGE_INFO_FREEMARKER_TEMPLATE_FILE,
                 Map.of("modelPackage", getModelPackage()));

@@ -65,22 +65,30 @@ The configuration file is in JSON format and looks like this:
     "generator-b",
     "generator-c"
   ],
+  "javaSpring": {
+    
+  },
+  "swagger": {
+    
+  },
   "parameters": {
   }
 }
 ```
 
-| Attribute | Description | Obligation |
-|-----------------------------|:-----------------------------------------------------------------:|----------:|
-| databaseConnection.url | JDBC to EA database | &check; |
-| databaseConnection.user | username for DB connection | &check; |
-| databaseConnection.password | password for DB connection | &check; |
-| mappingConfiguration.type | mapping type (at the moment always = "custom" | &check; |
-| mappingConfiguration.profile | mapper name (corresponds to the name in the @Mapper annotation) | &check; |
-| eaStartPackage | Location of the diagram in EA | &check; |
-| version | Version of output files | &check; |
+| Attribute |                                    Description                                    | Obligation |
+|-----------------------------|:---------------------------------------------------------------------------------:|----------:|
+| databaseConnection.url |                                JDBC to EA database                                | &check; |
+| databaseConnection.user |                            username for DB connection                             | &check; |
+| databaseConnection.password |                            password for DB connection                             | &check; |
+| mappingConfiguration.type |                   mapping type (at the moment always = "custom"                   | &check; |
+| mappingConfiguration.profile |          mapper name (corresponds to the name in the @Mapper annotation)          | &check; |
+| eaStartPackage |                           Location of the diagram in EA                           | &check; |
+| version |                              Version of output files                              | &check; |
 | enabledGenerators | List of enabled generators (corresponds to the name in the @Generator annotation) | &check; |
-| parameters | Additional parameters for individual generators | &cross; |
+| javaSpring                   |             Parameterization of the built-in "java-spring" generator              |   &cross; |
+| swagger                      |               Parameterization of the built-in "swagger" generator                |   &cross; |
+| parameters |                  Additional parameters for individual generators                  | &cross; |
 
 Parameters refer to individual generators and their obligation depends on the enabled generator list.
 
@@ -239,7 +247,6 @@ public class MyGenerator implements GeneratorHandler {
     private final FileProcessor fileProcessor;
 
     @Override
-
     public void run() {
         //implement generator logic here
         Writer fileData = new StringWriter();
@@ -253,23 +260,35 @@ public class MyGenerator implements GeneratorHandler {
 The framework contains several built-in generators that can be run.
 
 ### Java SpringBoot
-| Name                                         |                   Description                   |
-|----------------------------------------------|:-----------------------------------------------:|
-| <strong>java-spring</strong>                 |                Name of generator                |
-| parameters.javaDistributionManagementRepoId  |          ID of distribution repository          |
-| parameters.javaDistributionManagementRepoUrl |     URL address of distribution repository      |
-| parameters.javaDtoType                       |    model type (class with LOMBOK or RECORDS)    |
-| parameters.javaControllerType                | type of Rest Controllers (REACTIVE or STANDARD) |
-| parameters.javaVersion                       |                  Java version                   |
-| parameters.javaGroupId                       |          groupId of generated project           |
-| parameters.javaProjectName                   |            name of generated project            |
-| parameters.javaPackage                       |      root package of generated java files       |
+| Název                                      |                              Popis                              |
+|--------------------------------------------|:---------------------------------------------------------------:|
+| <strong>java-spring</strong>               |                        Name of generator                        |
+| javaSpring.controllerType                  |         Type of Rest Controllers (REACTIVE or STANDARD)         |
+| javaSpring.dtoType                         |            Model type (class with LOMBOK or RECORDS)            |
+| javaSpring.packageName                     |              Root package of generated java files               |
+| javaSpring.pom                             |              Object with information about pom.xml              |
+| javaSpring.pom.name                        |                  Name of the generated project                  |
+| javaSpring.pom.javaVersion                 |                         Version of Java                         |
+| javaSpring.pom.groupId                     |                  groupId of generated project                   |
+| javaSpring.pom.artifactId                  |                 artifactId of generated project                 |
+| javaSpring.pom.distributionManagement[]    |                      Array of repositories                      |
+| javaSpring.pom.distributionManagement.type | Distribution repository type (snapshotRepository or repository) |
+| javaSpring.pom.distributionManagement.id   |                  ID of distribution repository                  |
+| javaSpring.pom.distributionManagement.url  |             URL address of distribution repository              |
+| javaSpring.pom.repositories[]              |                      Array of repositories                      |
+| javaSpring.pom.repositories.name           |                       Name of repository                        |
+| javaSpring.pom.repositories.id             |                        ID of repository                         |
+| javaSpring.pom.repositories.url            |                    URL address of repository                    |
+| javaSpring.pom.pluginRepositories[]              |                  Array of plugin repositories                   |
+| javaSpring.pom.pluginRepositories.name           |                    Name of plugin repository                    |
+| javaSpring.pom.pluginRepositories.id             |                     ID of plugin repository                     |
+| javaSpring.pom.pluginRepositories.url            |                URL address of plugin repository                 |
 
 ### Swagger
 | Name                                       |            Description             |
 |---------------------------------------------|:----------------------------------:|
 | <strong>swagger</strong>                    |         Name of generator          |
-| parameters.swaggerTitle | Name of generated swagger document |
+| swagger.title  | Name of generated swagger document |
 
 ### AvroSchema
 | Name                                       |    Description    |

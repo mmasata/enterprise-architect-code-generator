@@ -21,9 +21,6 @@ public final class JavaConstants {
     public static final String JAVA_POM_FREEMARKER_TEMPLATE_FILE = "pom.ftlh";
     public static final String JAVA_PACKAGE_INFO_FREEMARKER_TEMPLATE_FILE = "package-info.ftlh";
 
-    public static final String JAVA_VERSION_PARAM = "javaVersion";
-    public static final String JAVA_PACKAGE_PARAM = "javaPackage";
-    public static final String JAVA_PROJECT_NAME = "javaProjectName";
     public static final String JAVA_FILE_OUTPUT_PATTERN = "%s/%s/%s.java";
     public static final String JAVA_PROJECT_MAIN_PATTERN = "%s/src/main/java";
     public static final String JAVA_REST_CONTROLLER_PACKAGE = "rest";
@@ -47,9 +44,6 @@ public final class JavaConstants {
     public static final String IMPORT_PATH_PARAM = "org.springframework.web.bind.annotation.PathVariable";
     public static final String IMPORT_REQUEST_HEADER = "org.springframework.web.bind.annotation.RequestHeader";
     public static final String IMPORT_REQUEST_BODY = "org.springframework.web.bind.annotation.RequestBody;";
-
-    public static final String CONTROLLER_MODE_REACTIVE = "REACTIVE";
-    public static final String CONTROLLER_MODE_STANDARD = "STANDARD";
 
     public static final Set<HttpStatus> ERROR_STATUSES = Set.of(HttpStatus.BadRequest, HttpStatus.Unauthorized, HttpStatus.PaymentRequired,
             HttpStatus.Forbidden, HttpStatus.NotFound, HttpStatus.MethodNotAllowed, HttpStatus.NotAcceptable, HttpStatus.ProxyAuthenticationRequired, HttpStatus.RequestTimeout,

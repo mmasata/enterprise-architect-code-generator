@@ -1,6 +1,6 @@
 {
   "databaseConnection": {
-    "url" : "DB_URL",
+    "url": "DB_URL",
     "user": "DB_USER",
     "password": "DB_PASSWORD"
   },
@@ -13,17 +13,46 @@
   "enabledGenerators": [
     "swagger",
     "test",
-    "java-rest-records"
+    "java-spring"
   ],
-  "parameters": {
-    "swaggerTitle" : "Swagger title of API",
-    "javaDistributionManagementRepoId": "repo-name",
-    "javaDistributionManagementRepoUrl": "https://www.example.com/repo",
-    "javaDtoType": "RECORDS",
-    "javaControllerType": "REACTIVE",
-    "javaVersion": "17",
-    "javaGroupId": "cz.com.example",
-    "javaProjectName": "example-app-interfaces",
-    "javaPackage": "cz.com.example.app.generated"
+  "javaSpring": {
+    "controllerType": "REACTIVE",
+    "dtoType": "RECORDS",
+    "packageName": "cz.com.example.app.generated",
+    "pom": {
+      "name": "example-app-interfaces",
+      "javaVersion": 17,
+      "groupId": "cz.com.example",
+      "artifactId": "example-app-interfaces",
+      "distributionManagement": [
+        {
+          "type": "repository",
+          "id": "example-repo",
+          "url": "SOME_URL"
+        },
+        {
+          "type": "snapshotRepository",
+          "id": "example-snapshot-repo",
+          "url": "SOME_URL"
+        }
+      ],
+      "repositories": [
+        {
+          "id": "example-repo",
+          "name": "Example repository",
+          "url": "SOME_URL"
+        }
+      ],
+      "pluginRepositories": [
+        {
+          "id": "example-plugin-repo",
+          "name": "Example plugin repo",
+          "url": "SOME_URL"
+        }
+      ]
+    }
+  },
+  "swagger": {
+    "title": "Swagger title of API"
   }
 }

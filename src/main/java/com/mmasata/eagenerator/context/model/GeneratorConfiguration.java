@@ -21,4 +21,8 @@ public final class GeneratorConfiguration {
     private Set<String> enabledGenerators;
 
     private Map<String, Object> parameters;
+
+    private JavaSpringConfiguration javaSpring;
+
+    private SwaggerConfiguration swagger;
 }

@@ -24,9 +24,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
-            <version>3.0.5</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>6.0.8</version>
         </dependency>
 
         <dependency>
@@ -37,20 +37,34 @@
 
     </dependencies>
 
-    <#if repoId?? && repoUrl??>
-
     <distributionManagement>
-        <repository>
-            <id>${repoId}</id>
-            <url>${repoUrl}</url>
-        </repository>
-
-        <snapshotRepository>
-            <id>${repoId}</id>
-            <url>${repoUrl}</url>
-        </snapshotRepository>
+        <#list distributionManagement as distMng>
+            <${distMng.type}>
+                <id>${distMng.id}</id>
+                <url>${distMng.url}</url>
+            </${distMng.type}>
+        </#list>
     </distributionManagement>
 
-    </#if>
+    <repositories>
+        <#list repositories as repo>
+            <repository>
+            <id>${repo.id}</id>
+            <name>${repo.name}</name>
+            <url>${repo.url}</url>
+            </repository>
+        </#list>
+    </repositories>
+
+
+    <pluginRepositories>
+        <#list pluginRepositories as pluginRepo>
+            <pluginRepository>
+                <id>${pluginRepo.id}</id>
+                <name>${pluginRepo.name}</name>
+                <url>${pluginRepo.url}</url>
+            </pluginRepository>
+        </#list>
+    </pluginRepositories>
 
 </project>

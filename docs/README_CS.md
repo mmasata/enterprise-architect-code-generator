@@ -68,21 +68,29 @@ Konfigurační soubor je ve formátu JSON a vypadá následovně:
     "generator-b",
     "generator-c"
   ],
+  "javaSpring": {
+
+  },
+  "swagger": {
+
+  },
   "parameters": {
   }
 }
 ```
-| Atribut                     |                               Popis                               | Povinnost |
-|-----------------------------|:-----------------------------------------------------------------:|----------:|
-| databaseConnection.url      |                        JDBC k EA databázi                         |   &check; |
-| databaseConnection.user     |                    username pro připojení k DB                    |   &check; |
-| databaseConnection.password |                     heslo pro připojení k DB                      |   &check; |
-| mappingConfiguration.type       |            typ mapování (v tuto chvíli vždy = "custom"            |   &check; |
-| mappingConfiguration.profile       |         název mapperu (odpovídá názvu v anotaci @Mapper)          |   &check; |
-| eaStartPackage       |                      Umístění diagramu v EA                       |   &check; |
-| version       |                     Verze výstupních souborů                      |   &check; |
-| enabledGenerators       | Seznam zapnutých generátorů (odpovídá názvu v anotaci @Generator) |   &check; |
-| parameters       |           Dodatečné parametry pro jednotlivé generátory           |   &cross; |
+| Atribut                      |                               Popis                               | Povinnost |
+|------------------------------|:-----------------------------------------------------------------:|----------:|
+| databaseConnection.url       |                        JDBC k EA databázi                         |   &check; |
+| databaseConnection.user      |                    username pro připojení k DB                    |   &check; |
+| databaseConnection.password  |                     heslo pro připojení k DB                      |   &check; |
+| mappingConfiguration.type    |            typ mapování (v tuto chvíli vždy = "custom"            |   &check; |
+| mappingConfiguration.profile |         název mapperu (odpovídá názvu v anotaci @Mapper)          |   &check; |
+| eaStartPackage               |                      Umístění diagramu v EA                       |   &check; |
+| version                      |                     Verze výstupních souborů                      |   &check; |
+| enabledGenerators            | Seznam zapnutých generátorů (odpovídá názvu v anotaci @Generator) |   &check; |
+| javaSpring                   |        Parametrizace vestavěného generátoru "java-spring"         |   &cross; |
+| swagger                      |          Parametrizace vestavěného generátoru "swagger"           |   &cross; |
+| parameters                   |           Dodatečné parametry pro jednotlivé generátory           |   &cross; |
 
 Parameters se vztahují k jednotlivým generátorům a jejich povinnost závisí dle zapnutého seznamu generátorů.
 
@@ -255,7 +263,6 @@ public class MyGenerator implements GeneratorHandler {
     private final FileProcessor fileProcessor;
 
     @Override
-
     public void run() {
         //implement generator logic here
         Writer fileData = new StringWriter();
@@ -269,23 +276,35 @@ public class MyGenerator implements GeneratorHandler {
 Framework v sobě obsahuje několik zabudovaných generátorů, které lze spustit.
 
 ### Java SpringBoot
-| Název                                        |                     Popis                     |
-|----------------------------------------------|:---------------------------------------------:|
-| <strong>java-spring</strong>                 |               Název generátoru                |
-| parameters.javaDistributionManagementRepoId  |          ID distribučního repositáře          |
-| parameters.javaDistributionManagementRepoUrl |      URL adresa distribučního repositáře      |
-| parameters.javaDtoType                       |    typ modelů (třídy s LOMBOK či RECORDS)     |
-| parameters.javaControllerType                | typ Rest controllerů (REACTIVE nebo STANDARD) |
-| parameters.javaVersion                       |                  verze javy                   |
-| parameters.javaGroupId                       |        groupId vygenerovaného projektu        |
-| parameters.javaProjectName                   |         název vygenerovaného projektu         |
-| parameters.javaPackage                       |   root package vygenerovaných java souborů    |
+| Název                                      |                               Popis                               |
+|--------------------------------------------|:-----------------------------------------------------------------:|
+| <strong>java-spring</strong>               |                         Název generátoru                          |
+| javaSpring.controllerType                  |           typ Rest controllerů (REACTIVE nebo STANDARD)           |
+| javaSpring.dtoType                         |              typ modelů (třídy s LOMBOK či RECORDS)               |
+| javaSpring.packageName                     |             root package vygenerovaných java souborů              |
+| javaSpring.pom                             |                  Objekt s informacemi o pom.xml                   |
+| javaSpring.pom.name                        |                   název vygenerovaného projektu                   |
+| javaSpring.pom.javaVersion                 |                            verze javy                             |
+| javaSpring.pom.groupId                     |                  groupId vygenerovaného projektu                  |
+| javaSpring.pom.artifactId                  |                artifactId vygenerovaného projektu                 |
+| javaSpring.pom.distributionManagement[]    |                          Pole repositářů                          |
+| javaSpring.pom.distributionManagement.type | Typ distribučního repositáře (snapshotRepository nebo repository) |
+| javaSpring.pom.distributionManagement.id   |                    ID distribučního repositáře                    |
+| javaSpring.pom.distributionManagement.url  |                URL adresa distribučního repositáře                |
+| javaSpring.pom.repositories[]              |                          Pole repositářů                          |
+| javaSpring.pom.repositories.name           |                         Jméno repositáře                          |
+| javaSpring.pom.repositories.id             |                           ID repositáře                           |
+| javaSpring.pom.repositories.url            |                       URL adresa repositáře                       |
+| javaSpring.pom.pluginRepositories[]              |                      Pole plugin repositářů                       |
+| javaSpring.pom.pluginRepositories.name           |                      Jméno plugin repositáře                      |
+| javaSpring.pom.pluginRepositories.id             |                       ID plugin repositáře                        |
+| javaSpring.pom.pluginRepositories.url            |                      URL adresa plugin repositáře                       |
 
 ### Swagger
-| Název                                       |                  Popis                  |
-|---------------------------------------------|:---------------------------------------:|
-| <strong>swagger</strong>                    |            Název generátoru             |
-| parameters.swaggerTitle | Název vygenerovaného swaggeru dokumentu |
+| Název                    |                  Popis                  |
+|--------------------------|:---------------------------------------:|
+| <strong>swagger</strong> |            Název generátoru             |
+| swagger.title            | Název vygenerovaného swaggeru dokumentu |
 
 ### AvroSchema
 | Název                                       |                  Popis                  |

@@ -4,6 +4,7 @@ import com.mmasata.eagenerator.api.DTOProperty;
 import com.mmasata.eagenerator.api.rest.ApiEndpoint;
 import com.mmasata.eagenerator.api.rest.Parameter;
 import com.mmasata.eagenerator.context.GeneratorContext;
+import com.mmasata.eagenerator.context.model.SwaggerConfiguration;
 import com.mmasata.eagenerator.service.constants.SwaggerConstants;
 import com.mmasata.eagenerator.service.freemarker.model.SwaggerEndpoint;
 import com.mmasata.eagenerator.service.freemarker.model.SwaggerParameter;
@@ -31,8 +32,8 @@ public class SwaggerMapper implements Function<GeneratorContext, Map<String, Obj
         var swaggerPaths = new ArrayList<SwaggerPath>();
 
         var restApiResources = generatorContext.getApiResources();
-        var configuration = generatorContext.getConfiguration();
-        var parameters = configuration.getParameters();
+        var config = generatorContext.getConfiguration();
+        var swaggerConfig = (SwaggerConfiguration) config.getSwagger();
 
         restApiResources.forEach(restApiResource -> {
 
@@ -67,8 +68,8 @@ public class SwaggerMapper implements Function<GeneratorContext, Map<String, Obj
                 .map(this::mapSwaggerSchema)
                 .toList();
 
-        return Map.of("title", parameters.get("swaggerTitle"),
-                "version", configuration.getVersion(),
+        return Map.of("title", swaggerConfig.getTitle(),
+                "version", config.getVersion(),
                 "endpoints", swaggerPaths,
                 "schemas", swaggerSchemas);
     }

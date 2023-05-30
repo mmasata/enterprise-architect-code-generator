@@ -4,7 +4,7 @@ import com.mmasata.eagenerator.api.rest.ApiEndpoint;
 import com.mmasata.eagenerator.api.rest.ApiResource;
 import com.mmasata.eagenerator.api.rest.HttpMessage;
 import com.mmasata.eagenerator.api.rest.enums.HttpStatus;
-import com.mmasata.eagenerator.context.GeneratorContext;
+import com.mmasata.eagenerator.context.model.enums.ControllerType;
 import com.mmasata.eagenerator.service.constants.JavaConstants;
 import com.mmasata.eagenerator.service.freemarker.model.JavaEndpoint;
 import com.mmasata.eagenerator.service.helper.JavaHelper;
@@ -18,29 +18,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 @RequiredArgsConstructor
-public class JavaRestControllerMapper implements Function<GeneratorContext, List<JavaFileDTO>> {
+public class JavaRestControllerMapper implements BiFunction<ControllerType, List<ApiResource>, List<JavaFileDTO>> {
 
     private final JavaHelper javaHelper;
 
     @Override
-    public List<JavaFileDTO> apply(GeneratorContext generatorContext) {
-
-        var controllerType = (String) generatorContext.getConfiguration().getParameters().get("javaControllerType");
-        return generatorContext.getApiResources().stream()
+    public List<JavaFileDTO> apply(ControllerType controllerType, List<ApiResource> apiResources) {
+        return apiResources.stream()
                 .map(apiResource -> mapToRestController(controllerType, apiResource))
                 .toList();
     }
 
-    private JavaFileDTO mapToRestController(String controllerType,
+    private JavaFileDTO mapToRestController(ControllerType controllerType,
                                             ApiResource apiResource) {
 
         var imports = new TreeSet<String>();
-        var isReactive = JavaConstants.CONTROLLER_MODE_REACTIVE.equalsIgnoreCase(controllerType);
+        var isReactive = controllerType == ControllerType.REACTIVE;
         var endpoints = apiResource.getEndpoints().stream()
-                .map(apiEndpoint -> mapToRestEndpoint(apiEndpoint, imports, controllerType))
+                .map(apiEndpoint -> mapToRestEndpoint(apiEndpoint, imports, isReactive))
                 .toList();
 
         var name = isReactive
@@ -62,12 +60,11 @@ public class JavaRestControllerMapper implements Function<GeneratorContext, List
 
     private JavaEndpoint mapToRestEndpoint(ApiEndpoint apiEndpoint,
                                            Set<String> imports,
-                                           String controllerMode) {
+                                           boolean isReactive) {
 
         var path = (StringUtils.isEmpty(apiEndpoint.getPath()))
                 ? null
                 : apiEndpoint.getPath();
-        var isReactive = JavaConstants.CONTROLLER_MODE_REACTIVE.equalsIgnoreCase(controllerMode);
         var response = getRelevantResponse(apiEndpoint.getResponses());
 
         var endpoint = new JavaEndpoint();
@@ -167,5 +164,4 @@ public class JavaRestControllerMapper implements Function<GeneratorContext, List
 
         return null;
     }
-
 }
