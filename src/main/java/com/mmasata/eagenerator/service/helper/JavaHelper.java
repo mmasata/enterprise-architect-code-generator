@@ -21,12 +21,6 @@ public class JavaHelper {
 
     private final GeneratorContext generatorContext;
 
-    public String objectNameToVariableName(String objectName) {
-        return Character.toLowerCase(objectName.charAt(0)) + (objectName.length() > 1
-                ? objectName.substring(1)
-                : "");
-    }
-
     public String getModelPackage() {
         var packageName = generatorContext.getConfiguration().getJavaSpring().getPackageName();
 

@@ -8,6 +8,7 @@ import com.mmasata.eagenerator.service.constants.JavaConstants;
 import com.mmasata.eagenerator.service.freemarker.model.JavaParam;
 import com.mmasata.eagenerator.service.helper.JavaHelper;
 import com.mmasata.eagenerator.service.model.JavaFileDTO;
+import com.mmasata.eagenerator.utils.FormatUtils;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
@@ -98,7 +99,7 @@ public class JavaDTOMapper implements Function<GeneratorContext, List<JavaFileDT
                 imports.add(childJavaDataType.getImportName());
             }
 
-            javaParams.add(new JavaParam(!wrapper.isRequired(), attributeDataType, name));
+            javaParams.add(new JavaParam(!wrapper.isRequired(), attributeDataType, FormatUtils.toCamelCase(name)));
         });
 
         DTOObject

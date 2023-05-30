@@ -9,6 +9,7 @@ import com.mmasata.eagenerator.service.constants.JavaConstants;
 import com.mmasata.eagenerator.service.freemarker.model.JavaEndpoint;
 import com.mmasata.eagenerator.service.helper.JavaHelper;
 import com.mmasata.eagenerator.service.model.JavaFileDTO;
+import com.mmasata.eagenerator.utils.FormatUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
@@ -110,17 +111,16 @@ public class JavaRestControllerMapper implements BiFunction<ControllerType, List
 
         if (apiEndpoint.getRequest() != null) {
             var objectName = apiEndpoint.getRequest().getProperty().getProperty().getName();
-            params.add(JavaConstants.REQUEST_BODY_WRAPPER.formatted(objectName, javaHelper.objectNameToVariableName(objectName)));
+            params.add(JavaConstants.REQUEST_BODY_WRAPPER.formatted(objectName, FormatUtils.toCamelCase(objectName)));
 
             imports.add(JavaConstants.IMPORT_REQUEST_BODY);
             imports.add(javaHelper.getModelPackage() + "." + objectName);
         }
 
-        //TODO nejak zobecnit
         //queryParams
         apiEndpoint.getQueryParams().forEach(queryParam -> {
             var dataType = JavaConstants.JAVA_DATA_TYPES_MAPPER.get(queryParam.getDataType());
-            params.add(JavaConstants.REQUEST_PARAM_WRAPPER.formatted(dataType.getDataType(), queryParam.getName()));
+            params.add(JavaConstants.REQUEST_PARAM_WRAPPER.formatted(dataType.getDataType(), FormatUtils.toCamelCase(queryParam.getName())));
 
             imports.add(JavaConstants.IMPORT_REQUEST_PARAM);
             if (dataType.getImportName() != null) {
@@ -131,7 +131,7 @@ public class JavaRestControllerMapper implements BiFunction<ControllerType, List
         //pathParams
         apiEndpoint.getPathParams().forEach(pathParam -> {
             var dataType = JavaConstants.JAVA_DATA_TYPES_MAPPER.get(pathParam.getDataType());
-            params.add(JavaConstants.PATH_PARAM_WRAPPER.formatted(dataType.getDataType(), pathParam.getName()));
+            params.add(JavaConstants.PATH_PARAM_WRAPPER.formatted(dataType.getDataType(), FormatUtils.toCamelCase(pathParam.getName())));
 
             imports.add(JavaConstants.IMPORT_PATH_PARAM);
             if (dataType.getImportName() != null) {
@@ -142,7 +142,7 @@ public class JavaRestControllerMapper implements BiFunction<ControllerType, List
         //headers
         apiEndpoint.getHttpHeaders().forEach(header -> {
             var dataType = JavaConstants.JAVA_DATA_TYPES_MAPPER.get(header.getDataType());
-            params.add(JavaConstants.HEADER_PARAM_WRAPPER.formatted(header.getName(), dataType.getDataType(), header.getName()));
+            params.add(JavaConstants.HEADER_PARAM_WRAPPER.formatted(header.getName(), dataType.getDataType(), FormatUtils.toCamelCase(header.getName())));
             imports.add(JavaConstants.IMPORT_REQUEST_HEADER);
 
             if (dataType.getImportName() != null) {

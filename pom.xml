@@ -12,7 +12,7 @@
     <groupId>com.mmasata.library</groupId>
     <artifactId>spring-boot-starter-ea-generator</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <modelVersion>4.0.0</modelVersion>
 
 

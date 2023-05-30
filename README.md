@@ -9,7 +9,7 @@
 <dependency>
     <groupId>com.mmasata.library</groupId>
     <artifactId>spring-boot-starter-ea-generator</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 </dependency>
 ```
 
@@ -18,3 +18,6 @@
 **2023-05-30 - version 1.0.1**
 - Adding pom.xml configurability (repositories, pluginRepositories and distributionManagement)
 - update README
+
+**2023-05-30 - version 1.0.2**
+- Automatically convert variable names to camelCase format in "java-spring" generator profile
