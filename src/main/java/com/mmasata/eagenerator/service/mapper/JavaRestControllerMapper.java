@@ -3,7 +3,9 @@ package com.mmasata.eagenerator.service.mapper;
 import com.mmasata.eagenerator.api.rest.ApiEndpoint;
 import com.mmasata.eagenerator.api.rest.ApiResource;
 import com.mmasata.eagenerator.api.rest.HttpMessage;
+import com.mmasata.eagenerator.api.rest.enums.HttpMethod;
 import com.mmasata.eagenerator.api.rest.enums.HttpStatus;
+import com.mmasata.eagenerator.context.GeneratorContext;
 import com.mmasata.eagenerator.context.model.enums.ControllerType;
 import com.mmasata.eagenerator.service.constants.JavaConstants;
 import com.mmasata.eagenerator.service.freemarker.model.JavaEndpoint;
@@ -17,12 +19,15 @@ import org.springframework.lang.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.BiFunction;
 
 @RequiredArgsConstructor
 public class JavaRestControllerMapper implements BiFunction<ControllerType, List<ApiResource>, List<JavaFileDTO>> {
+
+    private final GeneratorContext generatorContext;
 
     private final JavaHelper javaHelper;
 
@@ -67,12 +72,37 @@ public class JavaRestControllerMapper implements BiFunction<ControllerType, List
                 ? null
                 : apiEndpoint.getPath();
         var response = getRelevantResponse(apiEndpoint.getResponses());
+        var produces = Optional.of(apiEndpoint.getProduces())
+                .orElse(generatorContext.getConfiguration().getJavaSpring().getDefaultEndpointMediaType().getValue());
+        var consumes = Optional.of(apiEndpoint.getConsumes())
+                .orElse(generatorContext.getConfiguration().getJavaSpring().getDefaultEndpointMediaType().getValue());
 
         var endpoint = new JavaEndpoint();
         endpoint.setHttpMethod(apiEndpoint.getHttpMethod().name());
         endpoint.setPath(path);
         endpoint.setMethodName(apiEndpoint.getName());
+        endpoint.setProduces(produces);
+        endpoint.setConsumes(handleConsumes(consumes, apiEndpoint.getHttpMethod()));
+        endpoint.setReturnType(handleMethodReturnType(response, imports, isReactive));
+        endpoint.setParams(mapEndpointParams(apiEndpoint, imports));
 
+        return endpoint;
+    }
+
+    private String handleConsumes(String value,
+                                  HttpMethod httpMethod) {
+
+        return switch (httpMethod) {
+            case GET, DELETE:
+                yield null;
+            case POST, PUT, PATCH, OPTIONS:
+                yield value;
+        };
+    }
+
+    private String handleMethodReturnType(HttpMessage response,
+                                          Set<String> imports,
+                                          boolean isReactive) {
         var returnType = "Void";
         if (response != null) {
 
@@ -96,12 +126,7 @@ public class JavaRestControllerMapper implements BiFunction<ControllerType, List
                 returnType = type;
             }
         }
-        returnType = JavaConstants.METHOD_RETURN_TYPE_WRAPPER.formatted(returnType);
-
-        endpoint.setReturnType(returnType);
-        endpoint.setParams(mapEndpointParams(apiEndpoint, imports));
-
-        return endpoint;
+        return JavaConstants.METHOD_RETURN_TYPE_WRAPPER.formatted(returnType);
     }
 
     private List<String> mapEndpointParams(ApiEndpoint apiEndpoint,

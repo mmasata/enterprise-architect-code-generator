@@ -17,6 +17,7 @@
   ],
   "javaSpring": {
     "controllerType": "REACTIVE",
+    "defaultEndpointMediaType": "JSON",
     "dtoType": "RECORDS",
     "packageName": "cz.com.example.app.generated",
     "pom": {

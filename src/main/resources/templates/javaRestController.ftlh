@@ -16,7 +16,10 @@ public interface ${controllerName} {
 
     <#list endpoints as endpoint>
       // Override this method
-      @RequestMapping(method=RequestMethod.${endpoint.httpMethod}<#if endpoint.path??>, value="${endpoint.path}"</#if>)
+      @RequestMapping(method=RequestMethod.${endpoint.httpMethod}
+        <#if endpoint.path??>, value="${endpoint.path}"</#if>
+        <#if endpoint.produces??>, produces="${endpoint.produces}"</#if>
+        <#if endpoint.consumes??>, consumes="${endpoint.consumes}"</#if>)
       default ${endpoint.returnType} ${endpoint.methodName} (
 <@handleRequestParams params=endpoint.params/>) {
 

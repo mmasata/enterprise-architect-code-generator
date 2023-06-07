@@ -113,6 +113,8 @@ classDiagram
     ApiEndpoint : +String path
     ApiEndpoint : +String name
     ApiEndpoint : +String description
+    ApiEndpoint : +String produces
+    ApiEndpoint : +String consumes
     ApiEndpoint : +HttpMethod method
     ApiEndpoint : +HttpMessage request
     ApiEndpoint : +Map(HttpStatus, HttpMessage) responses
@@ -264,6 +266,7 @@ The framework contains several built-in generators that can be run.
 |--------------------------------------------|:---------------------------------------------------------------:|
 | <strong>java-spring</strong>               |                        Name of generator                        |
 | javaSpring.controllerType                  |         Type of Rest Controllers (REACTIVE or STANDARD)         |
+| javaSpring.defaultEndpointMediaType                  | default MediaType consumes/produces if no other is filled in |
 | javaSpring.dtoType                         |            Model type (class with LOMBOK or RECORDS)            |
 | javaSpring.packageName                     |              Root package of generated java files               |
 | javaSpring.pom                             |              Object with information about pom.xml              |

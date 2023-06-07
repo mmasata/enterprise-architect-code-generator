@@ -119,6 +119,8 @@ classDiagram
     ApiEndpoint : +String path
     ApiEndpoint : +String name
     ApiEndpoint : +String description
+    ApiEndpoint : +String produces
+    ApiEndpoint : +String consumes
     ApiEndpoint : +HttpMethod method
     ApiEndpoint : +HttpMessage request
     ApiEndpoint : +Map(HttpStatus, HttpMessage) responses
@@ -276,29 +278,30 @@ public class MyGenerator implements GeneratorHandler {
 Framework v sobě obsahuje několik zabudovaných generátorů, které lze spustit.
 
 ### Java SpringBoot
-| Název                                      |                               Popis                               |
-|--------------------------------------------|:-----------------------------------------------------------------:|
-| <strong>java-spring</strong>               |                         Název generátoru                          |
-| javaSpring.controllerType                  |           typ Rest controllerů (REACTIVE nebo STANDARD)           |
-| javaSpring.dtoType                         |              typ modelů (třídy s LOMBOK či RECORDS)               |
-| javaSpring.packageName                     |             root package vygenerovaných java souborů              |
-| javaSpring.pom                             |                  Objekt s informacemi o pom.xml                   |
-| javaSpring.pom.name                        |                   název vygenerovaného projektu                   |
-| javaSpring.pom.javaVersion                 |                            verze javy                             |
-| javaSpring.pom.groupId                     |                  groupId vygenerovaného projektu                  |
-| javaSpring.pom.artifactId                  |                artifactId vygenerovaného projektu                 |
-| javaSpring.pom.distributionManagement[]    |                          Pole repositářů                          |
-| javaSpring.pom.distributionManagement.type | Typ distribučního repositáře (snapshotRepository nebo repository) |
-| javaSpring.pom.distributionManagement.id   |                    ID distribučního repositáře                    |
-| javaSpring.pom.distributionManagement.url  |                URL adresa distribučního repositáře                |
-| javaSpring.pom.repositories[]              |                          Pole repositářů                          |
-| javaSpring.pom.repositories.name           |                         Jméno repositáře                          |
-| javaSpring.pom.repositories.id             |                           ID repositáře                           |
-| javaSpring.pom.repositories.url            |                       URL adresa repositáře                       |
-| javaSpring.pom.pluginRepositories[]              |                      Pole plugin repositářů                       |
-| javaSpring.pom.pluginRepositories.name           |                      Jméno plugin repositáře                      |
-| javaSpring.pom.pluginRepositories.id             |                       ID plugin repositáře                        |
-| javaSpring.pom.pluginRepositories.url            |                      URL adresa plugin repositáře                       |
+| Název                                      |                                 Popis                                 |
+|--------------------------------------------|:---------------------------------------------------------------------:|
+| <strong>java-spring</strong>               |                           Název generátoru                            |
+| javaSpring.controllerType                  |             typ Rest controllerů (REACTIVE nebo STANDARD)             |
+| javaSpring.defaultEndpointMediaType                  | defaultní MediaType consumes/produces, pokud není žádná jiná vyplněná |
+| javaSpring.dtoType                         |                typ modelů (třídy s LOMBOK či RECORDS)                 |
+| javaSpring.packageName                     |               root package vygenerovaných java souborů                |
+| javaSpring.pom                             |                    Objekt s informacemi o pom.xml                     |
+| javaSpring.pom.name                        |                     název vygenerovaného projektu                     |
+| javaSpring.pom.javaVersion                 |                              verze javy                               |
+| javaSpring.pom.groupId                     |                    groupId vygenerovaného projektu                    |
+| javaSpring.pom.artifactId                  |                  artifactId vygenerovaného projektu                   |
+| javaSpring.pom.distributionManagement[]    |                            Pole repositářů                            |
+| javaSpring.pom.distributionManagement.type |   Typ distribučního repositáře (snapshotRepository nebo repository)   |
+| javaSpring.pom.distributionManagement.id   |                      ID distribučního repositáře                      |
+| javaSpring.pom.distributionManagement.url  |                  URL adresa distribučního repositáře                  |
+| javaSpring.pom.repositories[]              |                            Pole repositářů                            |
+| javaSpring.pom.repositories.name           |                           Jméno repositáře                            |
+| javaSpring.pom.repositories.id             |                             ID repositáře                             |
+| javaSpring.pom.repositories.url            |                         URL adresa repositáře                         |
+| javaSpring.pom.pluginRepositories[]              |                        Pole plugin repositářů                         |
+| javaSpring.pom.pluginRepositories.name           |                        Jméno plugin repositáře                        |
+| javaSpring.pom.pluginRepositories.id             |                         ID plugin repositáře                          |
+| javaSpring.pom.pluginRepositories.url            |                     URL adresa plugin repositáře                      |
 
 ### Swagger
 | Název                    |                  Popis                  |

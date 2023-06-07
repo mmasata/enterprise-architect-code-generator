@@ -11,6 +11,8 @@ public class JavaEndpoint {
     private String path;
     private String returnType;
     private String methodName;
+    private String produces;
+    private String consumes;
 
     private List<String> params;
 

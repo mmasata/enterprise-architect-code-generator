@@ -22,6 +22,8 @@ public class ApiEndpoint {
     private String name;
     private String path;
     private String description;
+    private String produces;
+    private String consumes;
 
     private HttpMethod httpMethod;
     private HttpMessage request;
