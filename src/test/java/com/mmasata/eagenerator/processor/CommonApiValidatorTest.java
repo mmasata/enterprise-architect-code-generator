@@ -6,6 +6,7 @@ import com.mmasata.eagenerator.api.rest.HttpMessage;
 import com.mmasata.eagenerator.api.rest.enums.HttpMethod;
 import com.mmasata.eagenerator.api.rest.enums.HttpStatus;
 import com.mmasata.eagenerator.context.GeneratorContext;
+import com.mmasata.eagenerator.context.model.enums.MediaType;
 import com.mmasata.eagenerator.exception.GeneratorException;
 import com.mmasata.eagenerator.validator.CommonApiValidator;
 import org.junit.jupiter.api.BeforeEach;
@@ -97,6 +98,8 @@ class CommonApiValidatorTest {
         return new ApiEndpoint(name,
                 "/path",
                 "description",
+                MediaType.JSON.getValue(),
+                MediaType.JSON.getValue(),
                 httpMethod,
                 null,
                 responses,

@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Import;
  */
 @Slf4j
 @AutoConfiguration
-@AutoConfigureAfter(value = {GeneratorProcessorAutoConfiguration.class})
+@AutoConfigureAfter({GeneratorProcessorAutoConfiguration.class})
 @Import(value = {GeneratorContext.class, FileProcessor.class})
 @RequiredArgsConstructor
 public class GeneratorRunnerAutoConfiguration {
@@ -62,7 +62,7 @@ public class GeneratorRunnerAutoConfiguration {
     @Bean
     @DependsOn("javaHelper")
     public JavaRestControllerMapper javaRestControllerMapper(JavaHelper javaHelper) {
-        return new JavaRestControllerMapper(javaHelper);
+        return new JavaRestControllerMapper(generatorContext, javaHelper);
     }
 
     @Bean
