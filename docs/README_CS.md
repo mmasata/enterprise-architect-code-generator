@@ -113,6 +113,7 @@ classDiagram
     ApiResource : +ApiEndpoint[] apiEndpoints
     ApiResource : +String path
     ApiResource : +String name
+    ApiResource : +String description
     }
    
     class ApiEndpoint{
@@ -132,8 +133,11 @@ classDiagram
     class Parameter{
     Parameter : +String name
     Parameter : +String example
+    Parameter : +String description
+    Parameter : +String defaultValue
     Parameter : +boolean required
     Parameter : +DataType dataType
+    Parameter : +Constraint[] constraints
     }
     
     class HttpMessage{
@@ -152,6 +156,22 @@ classDiagram
     DTOProperty : +DataType dataType
     DTOProperty : +String[] enumValues
     DTOProperty : +Map(String, DTOPropertyWrapper) childProperties
+    DTOProperty : +Constraint[] constraints
+    }
+    
+    class Constraint{
+    Constraint : +String value
+    Constraint : +ConstraintType constraintType
+    }
+    
+    class ConstraintType{
+    <<enumeration>>
+    MIN
+    MAX
+    MIN_LENGTH
+    MAX_LENGTH
+    PATTERN
+    UNDEFINED
     }
     
     class DataType{
@@ -194,10 +214,13 @@ classDiagram
     ApiEndpoint-->HttpMethod
     ApiEndpoint-->Parameter
     Parameter-->DataType
+    Parameter-->Constraint
     HttpMessage-->HttpMessageType
     DTOProperty-->DataType
+    DTOProperty-->Constraint
     DTOProperty-->DTOPropertyWrapper
     DTOPropertyWrapper-->DTOProperty
+    Constraint-->ConstraintType
 ```
 
 ### Mapper

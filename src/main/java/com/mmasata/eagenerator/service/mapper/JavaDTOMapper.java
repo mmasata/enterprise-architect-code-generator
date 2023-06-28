@@ -2,7 +2,7 @@ package com.mmasata.eagenerator.service.mapper;
 
 import com.mmasata.eagenerator.api.DTOProperty;
 import com.mmasata.eagenerator.api.rest.ApiResource;
-import com.mmasata.eagenerator.api.rest.enums.DataType;
+import com.mmasata.eagenerator.api.enums.DataType;
 import com.mmasata.eagenerator.context.GeneratorContext;
 import com.mmasata.eagenerator.service.constants.JavaConstants;
 import com.mmasata.eagenerator.service.freemarker.model.JavaParam;

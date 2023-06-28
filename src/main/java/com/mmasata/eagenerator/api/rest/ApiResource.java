@@ -16,6 +16,7 @@ public class ApiResource {
 
     private String path;
     private String name;
+    private String description;
 
     private List<ApiEndpoint> endpoints;
 }

@@ -53,7 +53,7 @@ class CommonApiValidatorTest {
     @ParameterizedTest
     @MethodSource("validateApiEndpointProvider")
     void validate_apiEndpoint(ApiEndpoint apiEndpoint, boolean fatalError) {
-        var validApiResource = new ApiResource("/path", "controller", new ArrayList<>());
+        var validApiResource = new ApiResource("/path", "controller", "some_description", new ArrayList<>());
         validApiResource.getEndpoints().add(apiEndpoint);
 
         var context = mockGeneratorContext(List.of(validApiResource));
@@ -79,9 +79,9 @@ class CommonApiValidatorTest {
     private static Stream<Arguments> validateApiResourceProvider() {
         return Stream.of(
                 Arguments.of(null, true),
-                Arguments.of(new ApiResource(null, "controller", Collections.emptyList()), true),
-                Arguments.of(new ApiResource("/path", null, Collections.emptyList()), true),
-                Arguments.of(new ApiResource("/path", "controller", Collections.emptyList()), false)
+                Arguments.of(new ApiResource(null, "controller", "some_description", Collections.emptyList()), true),
+                Arguments.of(new ApiResource("/path", null,"some_description", Collections.emptyList()), true),
+                Arguments.of(new ApiResource("/path", "controller","some_description", Collections.emptyList()), false)
         );
     }
 

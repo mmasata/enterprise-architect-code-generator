@@ -29,6 +29,9 @@ public class TObject extends AbstractEntity {
     @Column(name = "Stereotype")
     private String stereotype;
 
+    @Column(name = "Note")
+    private String note;
+
     @Column(name = "ea_guid")
     private String eaGuid;
 

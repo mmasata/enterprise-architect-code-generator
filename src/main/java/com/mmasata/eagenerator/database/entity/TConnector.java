@@ -35,6 +35,15 @@ public class TConnector extends AbstractEntity implements Serializable {
     @Column(name = "DestCard")
     private String destCard;
 
+    @Column(name = "Direction")
+    private String direction;
+
+    @Column(name = "SourceRole")
+    private String srcRole;
+
+    @Column(name = "DestRole")
+    private String destRole;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Start_Object_ID")
     private TObject startObject;

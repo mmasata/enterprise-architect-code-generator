@@ -1,4 +1,4 @@
-package com.mmasata.eagenerator.api.rest.enums;
+package com.mmasata.eagenerator.api.enums;
 
 /**
  * Enum defining supported common-api data types.

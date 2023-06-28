@@ -1,6 +1,6 @@
 package com.mmasata.eagenerator.service.constants;
 
-import com.mmasata.eagenerator.api.rest.enums.DataType;
+import com.mmasata.eagenerator.api.enums.DataType;
 import com.mmasata.eagenerator.api.rest.enums.HttpStatus;
 import com.mmasata.eagenerator.service.model.enums.JavaDataType;
 import lombok.NoArgsConstructor;

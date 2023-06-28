@@ -1,6 +1,6 @@
 package com.mmasata.eagenerator.api;
 
-import com.mmasata.eagenerator.api.rest.enums.DataType;
+import com.mmasata.eagenerator.api.enums.DataType;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -17,10 +17,16 @@ import java.util.Map;
 public class DTOProperty {
 
     private String name;
+    private String namespace;
+    private String example;
+    private String defaultValue;
+    private String description;
 
     private DataType dataType;
 
     private List<String> enumValues = new ArrayList<>();
+
+    private List<Constraint> constraints = new ArrayList<>();
 
     private Map<String, DTOPropertyWrapper> childProperties = new HashMap<>();
 

@@ -9,11 +9,14 @@
 <dependency>
     <groupId>com.mmasata.library</groupId>
     <artifactId>spring-boot-starter-ea-generator</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 </dependency>
 ```
 
 ## Changelog
+
+**2023-06-28 - version 1.0.4**
+- Extend JPA entities, add support for constraint values in Common-API
 
 **2023-06-07 - version 1.0.3**
 - Add to "java-spring" generator produces and consumes information - with default value by config.
